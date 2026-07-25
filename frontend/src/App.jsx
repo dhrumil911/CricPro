@@ -1,6 +1,7 @@
 import Tournament from "./pages/Tournament";
 import Team from "./pages/Team";
 import Player from "./pages/Player";
+import Match from "./pages/Match";
 import { Routes, Route, useLocation } from "react-router-dom";
 
 import Navbar from "./components/Navbar";
@@ -24,6 +25,7 @@ function App() {
         <Route path="/tournaments" element={<Tournament />} />
         <Route path="/teams" element={<Team />} />
         <Route path="/players" element={<Player />} />
+        <Route path="/matches" element={<Match />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </>
