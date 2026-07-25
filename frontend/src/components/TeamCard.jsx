@@ -1,36 +1,68 @@
+import { Edit, Trash, User, MapPin, Shield, Users } from "lucide-react";
+
 function TeamCard({ team, deleteTeam, editTeam }) {
   return (
-    <div className="team-card">
-      <div className="card-top">
-        <h2>🏏 {team.name}</h2>
-        <span className={`status ${team.status === "Active" ? "active" : "inactive"}`}>
-          {team.status}
-        </span>
+    <div className="glass-card rounded-2xl border border-slate-250 dark:border-slate-800/80 p-6 flex flex-col justify-between hover:border-slate-400 dark:hover:border-slate-700/60 transition-all duration-300 relative overflow-hidden text-slate-750 dark:text-slate-200">
+      <div className={`absolute top-0 inset-x-0 h-1 ${
+        team.status === "Active" ? "bg-accent" : "bg-red-500"
+      }`} />
+
+      <div className="space-y-4">
+        {/* Title and status */}
+        <div className="flex justify-between items-start">
+          <div className="text-left">
+            <h3 className="font-display font-bold text-base text-slate-850 dark:text-slate-200 tracking-wide flex items-center gap-1.5">
+              <Shield className="w-4.5 h-4.5 text-accent" />
+              {team.name}
+            </h3>
+            <span className="text-[10px] text-slate-500 font-semibold uppercase mt-0.5 block">{team.city} franchise</span>
+          </div>
+
+          <span className={`text-[10px] font-semibold px-2 py-0.5 border rounded-full ${
+            team.status === "Active"
+              ? "bg-green-500/10 text-accent border-green-500/20"
+              : "bg-red-500/10 text-danger border-red-500/20"
+          }`}>
+            {team.status}
+          </span>
+        </div>
+
+        {/* Details list */}
+        <div className="space-y-2 border-t border-slate-200 dark:border-slate-850 pt-3 text-xs text-slate-655 dark:text-slate-400 text-left">
+          <div className="flex items-center gap-2">
+            <User className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500 shrink-0" />
+            <span><strong className="text-slate-800 dark:text-slate-300">Captain:</strong> {team.captain}</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <MapPin className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500 shrink-0" />
+            <span><strong className="text-slate-800 dark:text-slate-300">City:</strong> {team.city}</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <User className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500 shrink-0" />
+            <span><strong className="text-slate-800 dark:text-slate-300">Coach:</strong> {team.coach}</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <Users className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500 shrink-0" />
+            <span><strong className="text-slate-800 dark:text-slate-300">Squad Size:</strong> {team.totalPlayers} Players</span>
+          </div>
+        </div>
       </div>
 
-      <p>
-        <strong>👤 Captain:</strong> {team.captain}
-      </p>
-
-      <p>
-        <strong>📍 City:</strong> {team.city}
-      </p>
-
-      <p>
-        <strong>🏏 Coach:</strong> {team.coach}
-      </p>
-
-      <p>
-        <strong>👥 Total Players:</strong> {team.totalPlayers}
-      </p>
-
-      <div className="card-actions">
-        <button className="edit-btn" onClick={() => editTeam(team)}>
-          ✏ Edit
+      {/* Actions */}
+      <div className="flex items-center gap-3 mt-6 pt-4 border-t border-slate-200 dark:border-slate-850">
+        <button
+          onClick={() => editTeam(team)}
+          className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs font-semibold text-slate-700 dark:text-slate-300 hover:text-accent dark:hover:text-highlight hover:border-accent/40 dark:hover:border-highlight/30 hover:bg-slate-50 dark:hover:bg-slate-850 transition-all cursor-pointer"
+        >
+          <Edit className="w-3.5 h-3.5" />
+          Edit
         </button>
-
-        <button className="delete-btn" onClick={() => deleteTeam(team.id)}>
-          🗑 Delete
+        <button
+          onClick={() => deleteTeam(team.id)}
+          className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs font-semibold text-slate-500 dark:text-slate-400 hover:text-danger hover:border-danger/40 hover:bg-red-500/5 transition-all cursor-pointer"
+        >
+          <Trash className="w-3.5 h-3.5" />
+          Delete
         </button>
       </div>
     </div>

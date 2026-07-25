@@ -1,8 +1,182 @@
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
+@import "tailwindcss";
+
+/* Enable class-based dark mode selector in Tailwind CSS v4 */
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --logo-blue: #1b49b6;
+  --logo-gold: #b45309;
+  --logo-white: #ffffff;
+  --logo-ball: #ef4444;
+  --logo-text-color: #0f172a;
+  
+  --bg-color: #f8fafc;
+  --text-color: #334155;
+  --pitch-opacity: 0.015;
+  --stadium-opacity: 0.008;
+  --stadium-glow-opacity: 0.01;
+  
+  --glass-bg: #ffffff;
+  --glass-border: #e2e8f0;
+  --glass-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05);
+  
+  --glow-blue-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  --glow-gold-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
 }
 
-* {
-  box-sizing: border-box;
+.dark {
+  --logo-blue: #3b82f6;
+  --logo-gold: #facc15;
+  --logo-white: #f8fafc;
+  --logo-ball: #ef4444;
+  --logo-text-color: #f8fafc;
+  
+  --bg-color: #020617;
+  --text-color: #cbd5e1;
+  --pitch-opacity: 0.045;
+  --stadium-opacity: 0.3;
+  --stadium-glow-opacity: 0.16;
+  
+  --glass-bg: rgba(30, 41, 59, 0.45);
+  --glass-border: rgba(255, 255, 255, 0.06);
+  --glass-shadow: 0 8px 32px 0 rgba(2, 6, 23, 0.5);
+  
+  --glow-blue-shadow: 0 0 35px -5px rgba(37, 99, 235, 0.25);
+  --glow-gold-shadow: 0 0 35px -5px rgba(250, 204, 21, 0.25);
+}
+
+@theme {
+  --color-primary: #0F172A;
+  --color-secondary: #1E293B;
+  --color-accent: #2563EB; /* Premium blue for logo/accents */
+  --color-highlight: #FACC15; /* Gold */
+  --color-danger: #EF4444;
+  --color-bg-dark: #020617;
+  --font-sans: 'Inter', sans-serif;
+  --font-display: 'Space Grotesk', sans-serif;
+}
+
+@layer base {
+  body {
+    margin: 0;
+    font-family: var(--font-sans);
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: background-color 0.25s cubic-bezier(0.4, 0, 0.2, 1), color 0.25s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    transition: color 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}
+
+/* Global transitions for elements that need to swap colors smoothly */
+.transition-theme {
+  transition: background-color 0.25s cubic-bezier(0.4, 0, 0.2, 1), color 0.25s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Cricket Pitch Background Texture */
+.pitch-texture {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140' viewBox='0 0 140 140'%3E%3Crect x='56' y='10' width='28' height='120' stroke='%233b82f6' stroke-width='0.4' fill='none' stroke-opacity='1'/%3E%3Cline x1='56' y1='25' x2='84' y2='25' stroke='%233b82f6' stroke-width='0.4' stroke-opacity='1'/%3E%3Cline x1='56' y1='115' x2='84' y2='115' stroke='%233b82f6' stroke-width='0.4' stroke-opacity='1'/%3E%3Ccircle cx='70' cy='70' r='60' stroke='%23eab308' stroke-width='0.4' stroke-dasharray='2,4' fill='none' stroke-opacity='1'/%3E%3C/svg%3E");
+  opacity: var(--pitch-opacity);
+  transition: opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Stadium Silhouette backdrop overlay */
+.stadium-silhouette {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 240px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320' fill='%231e293b'%3E%3Cpath d='M0,224L48,208C96,192,192,160,288,144C384,128,480,128,576,149.3C672,171,768,213,864,229.3C960,245,1056,235,1152,213.3C1248,192,1344,160,1392,144L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3C/svg%3E");
+  background-position: bottom;
+  background-repeat: repeat-x;
+  background-size: contain;
+  pointer-events: none;
+  z-index: -10;
+  opacity: var(--stadium-opacity);
+  transition: opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Glassmorphism card styles: dark mode and light mode */
+.glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  transition: background-color 0.25s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1), transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Glassmorphic hover transitions */
+.glass-card-hover:hover {
+  transform: translateY(-4px);
+  border-color: var(--logo-blue);
+  box-shadow: 0 10px 25px 0 rgba(37, 99, 235, 0.08);
+}
+.dark .glass-card-hover:hover {
+  border-color: rgba(37, 99, 235, 0.4);
+  box-shadow: 0 12px 40px 0 rgba(37, 99, 235, 0.15);
+}
+
+/* Stadium glows */
+.stadium-glow {
+  position: absolute;
+  width: 500px;
+  height: 250px;
+  background: radial-gradient(circle, rgba(37, 99, 235, 0.12) 0%, rgba(15, 23, 42, 0) 70%);
+  filter: blur(50px);
+  pointer-events: none;
+  z-index: 0;
+  opacity: var(--stadium-glow-opacity);
+  transition: opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glow-blue {
+  box-shadow: var(--glow-blue-shadow);
+}
+.glow-gold {
+  box-shadow: var(--glow-gold-shadow);
+}
+
+/* Navigation Hover underline animation */
+.nav-link-underline {
+  position: relative;
+}
+.nav-link-underline::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: -4px;
+  left: 0;
+  background-color: var(--logo-blue);
+  transition: width 0.3s ease;
+}
+.nav-link-underline:hover::after {
+  width: 100%;
+}
+
+/* Scrollbar behaviors */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+.dark ::-webkit-scrollbar-track {
+  background: #020617;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+.dark ::-webkit-scrollbar-thumb {
+  background: #1e293b;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--logo-blue);
 }
