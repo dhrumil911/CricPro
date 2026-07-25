@@ -1,37 +1,38 @@
-function TeamCard() {
+function TeamCard({ team, deleteTeam, editTeam }) {
   return (
     <div className="team-card">
-
-      <h2>🦁 Gujarat Lions</h2>
+      <div className="card-top">
+        <h2>🏏 {team.name}</h2>
+        <span className={`status ${team.status === "Active" ? "active" : "inactive"}`}>
+          {team.status}
+        </span>
+      </div>
 
       <p>
-        <strong>👤 Captain:</strong> Hardik Pandya
+        <strong>👤 Captain:</strong> {team.captain}
       </p>
 
       <p>
-        <strong>🏏 Coach:</strong> Ashish Nehra
+        <strong>📍 City:</strong> {team.city}
       </p>
 
       <p>
-        <strong>📍 Home Ground:</strong> Narendra Modi Stadium
+        <strong>🏏 Coach:</strong> {team.coach}
       </p>
 
       <p>
-        <strong>👥 Players:</strong> 15
+        <strong>👥 Total Players:</strong> {team.totalPlayers}
       </p>
 
       <div className="card-actions">
-
-        <button className="edit-btn">
+        <button className="edit-btn" onClick={() => editTeam(team)}>
           ✏ Edit
         </button>
 
-        <button className="delete-btn">
+        <button className="delete-btn" onClick={() => deleteTeam(team.id)}>
           🗑 Delete
         </button>
-
       </div>
-
     </div>
   );
 }
