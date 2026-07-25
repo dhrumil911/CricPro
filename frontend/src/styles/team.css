@@ -1,0 +1,222 @@
+.team-layout {
+    display: flex;
+    width: 100%;
+}
+
+.team-page {
+    margin-left: 260px;
+    width: calc(100% - 260px);
+    min-height: 100vh;
+    background: #f4f7fc;
+    padding: 40px;
+    box-sizing: border-box;
+    overflow-x: hidden;
+}
+
+/* ==========================
+         Header
+========================== */
+
+.team-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.team-header h1 {
+    color: #1e3a8a;
+    font-size: 40px;
+    margin-bottom: 8px;
+}
+
+.team-header p {
+    color: #555;
+    font-size: 18px;
+}
+
+.add-btn {
+    background: #2563eb;
+    color: white;
+    border: none;
+    padding: 14px 25px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: .3s;
+}
+
+.add-btn:hover {
+    background: #1d4ed8;
+}
+
+/* ==========================
+        Search Box
+========================== */
+
+.search-box {
+    width: 100%;
+    padding: 14px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    margin-bottom: 35px;
+    font-size: 16px;
+    outline: none;
+}
+
+/* ==========================
+        Team Cards
+========================== */
+
+.team-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 25px;
+}
+
+.team-card {
+    background: white;
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0,0,0,.08);
+    transition: .3s;
+}
+
+.team-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 15px 30px rgba(37,99,235,.15);
+}
+
+.team-card h2 {
+    color: #2563eb;
+    margin-bottom: 18px;
+}
+
+.team-card p {
+    margin: 10px 0;
+    color: #555;
+    font-size: 16px;
+}
+
+/* ==========================
+         Buttons
+========================== */
+
+.card-actions {
+    margin-top: 20px;
+    display: flex;
+    gap: 12px;
+}
+
+.edit-btn,
+.delete-btn {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: .3s;
+    color: white;
+}
+
+.edit-btn {
+    background: #2563eb;
+}
+
+.edit-btn:hover {
+    background: #1d4ed8;
+}
+
+.delete-btn {
+    background: #dc2626;
+}
+
+.delete-btn:hover {
+    background: #b91c1c;
+}
+
+/* ==========================
+          Form
+========================== */
+
+.team-form {
+    margin-top: 45px;
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0,0,0,.08);
+}
+
+.team-form h2 {
+    margin-bottom: 20px;
+    color: #1e3a8a;
+}
+
+.team-form input {
+    width: 100%;
+    padding: 14px;
+    margin-bottom: 18px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    outline: none;
+    font-size: 16px;
+}
+
+.team-form button {
+    width: 100%;
+    background: #2563eb;
+    color: white;
+    border: none;
+    padding: 15px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.team-form button:hover {
+    background: #1d4ed8;
+}
+
+/* ==========================
+        Responsive
+========================== */
+
+@media (max-width:1000px) {
+
+    .team-page {
+        margin-left: 0;
+        width: 100%;
+        padding: 25px;
+    }
+
+    .team-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 20px;
+    }
+}
+
+@media (max-width:700px) {
+
+    .sidebar {
+        display: none;
+    }
+
+    .team-page {
+        margin-left: 0;
+        width: 100%;
+        padding: 20px;
+    }
+
+    .team-header h1 {
+        font-size: 32px;
+    }
+
+    .team-list {
+        grid-template-columns: 1fr;
+    }
+
+    .add-btn {
+        width: 100%;
+    }
+}
