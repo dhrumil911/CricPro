@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import { testConnection } from "./config/db.js";
+import authRoutes from "./routes/authRoutes.js";
 
 // Load environment variables
 dotenv.config();
@@ -19,6 +20,9 @@ app.use(cors(corsOptions));
 // Configure parsing middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Register routes
+app.use("/api/auth", authRoutes);
 
 // Health Check Route
 app.get("/health", (req, res) => {
