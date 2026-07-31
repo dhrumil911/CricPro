@@ -44,6 +44,17 @@ const seedDatabase = async () => {
       .map(cmd => cmd.trim())
       .filter(cmd => cmd.length > 0);
 
+    // Drop tables if they exist first, to support schema migrations
+    console.log("⏳ Dropping existing tables for clean schema migration...");
+    await connection.query("SET FOREIGN_KEY_CHECKS = 0");
+    await connection.query("DROP TABLE IF EXISTS matches");
+    await connection.query("DROP TABLE IF EXISTS players");
+    await connection.query("DROP TABLE IF EXISTS teams");
+    await connection.query("DROP TABLE IF EXISTS tournaments");
+    await connection.query("DROP TABLE IF EXISTS admins");
+    await connection.query("SET FOREIGN_KEY_CHECKS = 1");
+    console.log("✅ Tables dropped.");
+
     console.log("⏳ Initializing schema tables...");
     for (const command of sqlCommands) {
       if (command.toUpperCase().startsWith("USE")) continue;
@@ -51,26 +62,16 @@ const seedDatabase = async () => {
     }
     console.log("✅ Database schema tables created successfully.");
 
-    // 3. Clear existing seeded tables to avoid duplicate key errors
-    console.log("⏳ Clearing existing datasets...");
-    await connection.query("SET FOREIGN_KEY_CHECKS = 0");
-    await connection.query("TRUNCATE TABLE matches");
-    await connection.query("TRUNCATE TABLE players");
-    await connection.query("TRUNCATE TABLE teams");
-    await connection.query("TRUNCATE TABLE tournaments");
-    await connection.query("SET FOREIGN_KEY_CHECKS = 1");
-    console.log("✅ Existing data cleared.");
-
     // 4. Seed Tournaments
     console.log("⏳ Seeding tournaments...");
     const tournaments = [
-      ["IPL 2026", "League", "Mumbai & Pune", 12, "28 Mar - 24 May", "Ongoing"],
-      ["GPL 2026", "Knockout", "Surat Stadium", 16, "10 Apr - 28 Apr", "Upcoming"],
-      ["Champions Cup", "League", "Rajkot Arena", 8, "01 Jan - 20 Jan", "Completed"]
+      ["IPL 2026", "Indian Premier League 2026 Edition", "League", "Mumbai & Pune", "2026-03-28", "2026-05-24", 12, 20, "Ongoing", null],
+      ["GPL 2026", "Gujarat Premier League 2026 Edition", "Knockout", "Surat Stadium", "2026-04-10", "2026-04-28", 16, 20, "Upcoming", null],
+      ["Champions Cup", "Champions Cup Cricket Tournament", "Group Stage", "Rajkot Arena", "2026-01-01", "2026-01-20", 8, 20, "Completed", "MI"]
     ];
     for (const tourn of tournaments) {
       await connection.query(
-        "INSERT INTO tournaments (name, type, venue, teams_count, duration, status) VALUES (?, ?, ?, ?, ?, ?)",
+        "INSERT INTO tournaments (name, description, format, venue, start_date, end_date, total_teams, overs, status, winner_team) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
         tourn
       );
     }

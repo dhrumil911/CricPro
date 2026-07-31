@@ -3,7 +3,7 @@ import Sidebar from "../components/Sidebar";
 import Topbar from "../components/Topbar";
 import PlayerCard from "../components/PlayerCard";
 import PlayerForm from "../components/PlayerForm";
-import { Plus, Search } from "lucide-react";
+import { Plus, Search, User } from "lucide-react";
 
 function Player() {
   const [showForm, setShowForm] = useState(false);
@@ -88,8 +88,9 @@ function Player() {
           {/* Header Action Row */}
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 text-left">
             <div>
-              <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100 flex items-center gap-2 font-display">
-                🏏 Player Management
+              <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100 flex items-center gap-2.5 font-display">
+                <User className="w-6 h-6 text-accent dark:text-highlight shrink-0" />
+                Player Management
               </h1>
               <p className="text-slate-555 dark:text-slate-400 text-xs mt-1">
                 Maintain player details, track match milestones, batting/bowling statistics and active statuses.

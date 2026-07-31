@@ -31,7 +31,7 @@ function App() {
 
   return (
     <>
-      {(location.pathname === "/" || location.pathname === "/login") && <Navbar />}
+      {location.pathname === "/" && <Navbar />}
 
       <Routes>
         <Route path="/" element={<Home />} />

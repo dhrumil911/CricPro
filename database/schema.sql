@@ -15,12 +15,16 @@ CREATE TABLE IF NOT EXISTS admins (
 -- Tournaments table
 CREATE TABLE IF NOT EXISTS tournaments (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  name VARCHAR(255) NOT NULL,
-  type VARCHAR(100) NOT NULL, -- e.g. League, Knockout, Round Robin
+  name VARCHAR(255) UNIQUE NOT NULL,
+  description TEXT DEFAULT NULL,
+  format VARCHAR(100) NOT NULL, -- League / Knockout / Group Stage
   venue VARCHAR(255) NOT NULL,
-  teams_count INT DEFAULT 0,
-  duration VARCHAR(100) NOT NULL,
-  status VARCHAR(50) DEFAULT 'Upcoming', -- e.g. Upcoming, Ongoing, Completed
+  start_date DATE NOT NULL,
+  end_date DATE NOT NULL,
+  total_teams INT NOT NULL,
+  overs INT NOT NULL,
+  status VARCHAR(50) DEFAULT 'Upcoming', -- Upcoming / Ongoing / Completed
+  winner_team VARCHAR(255) DEFAULT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );

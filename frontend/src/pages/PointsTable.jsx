@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import Sidebar from "../components/Sidebar";
 import Topbar from "../components/Topbar";
 import PointsTableRow from "../components/PointsTableRow";
-import { Search, SlidersHorizontal } from "lucide-react";
+import { Search, SlidersHorizontal, Table2 } from "lucide-react";
 
 function PointsTable() {
   const [search, setSearch] = useState("");
@@ -106,8 +106,9 @@ function PointsTable() {
           
           {/* Header Row */}
           <div className="text-left">
-            <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100 flex items-center gap-2 font-display">
-              📊 Points Table
+            <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100 flex items-center gap-2.5 font-display">
+              <Table2 className="w-6 h-6 text-accent dark:text-highlight shrink-0" />
+              Points Table
             </h1>
             <p className="text-slate-500 dark:text-slate-400 text-xs mt-1">
               Live league standings, net run rate metrics, and qualification standings.

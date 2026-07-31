@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Sidebar from "../components/Sidebar";
 import Topbar from "../components/Topbar";
-import { Sliders, Bell, Shield, Save, Check } from "lucide-react";
+import { Sliders, Bell, Shield, Save, Check, Settings as SettingsIcon } from "lucide-react";
 
 function Settings() {
   const [activeTab, setActiveTab] = useState("general");
@@ -41,8 +41,9 @@ function Settings() {
 
         <main className="flex-1 p-6 md:p-8 overflow-y-auto space-y-6 relative z-10">
           <div className="text-left">
-            <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100 flex items-center gap-2 font-display">
-              ⚙️ Settings
+            <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100 flex items-center gap-2.5 font-display">
+              <SettingsIcon className="w-6 h-6 text-accent dark:text-highlight shrink-0 hover:rotate-45 transition-transform duration-300" />
+              Settings
             </h1>
             <p className="text-slate-500 dark:text-slate-400 text-xs mt-1">
               Configure system parameters, notification settings, and privacy permissions.

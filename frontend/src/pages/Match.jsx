@@ -3,7 +3,7 @@ import Sidebar from "../components/Sidebar";
 import Topbar from "../components/Topbar";
 import MatchCard from "../components/MatchCard";
 import MatchForm from "../components/MatchForm";
-import { Plus, Search } from "lucide-react";
+import { Plus, Search, Calendar } from "lucide-react";
 
 function Match() {
   const [showForm, setShowForm] = useState(false);
@@ -79,8 +79,9 @@ function Match() {
           {/* Header Action Row */}
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 text-left">
             <div>
-              <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100 flex items-center gap-2 font-display">
-                📅 Match Scheduling
+              <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100 flex items-center gap-2.5 font-display">
+                <Calendar className="w-6 h-6 text-accent dark:text-highlight shrink-0" />
+                Match Scheduling
               </h1>
               <p className="text-slate-555 dark:text-slate-400 text-xs mt-1">
                 Create new fixtures, assign umpires and toss information, and monitor live matches.

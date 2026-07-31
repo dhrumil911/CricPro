@@ -16,7 +16,7 @@ import {
   Legend,
   ResponsiveContainer
 } from "recharts";
-import { Filter, Calendar, Users, Trophy, BookOpen } from "lucide-react";
+import { Filter, Calendar, Users, Trophy, BookOpen, TrendingUp } from "lucide-react";
 
 function Reports() {
   const [selectedTournament, setSelectedTournament] = useState("All");
@@ -132,8 +132,9 @@ function Reports() {
           {/* Header Action Row */}
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 text-left">
             <div>
-              <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100 flex items-center gap-2 font-display">
-                📈 Reports & Statistics
+              <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100 flex items-center gap-2.5 font-display">
+                <TrendingUp className="w-6 h-6 text-accent dark:text-highlight shrink-0" />
+                Reports & Statistics
               </h1>
               <p className="text-slate-500 dark:text-slate-400 text-xs mt-1">
                 Deep analytical breakdowns of tournaments, player career charts, and win metrics.

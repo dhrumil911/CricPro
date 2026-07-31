@@ -91,7 +91,7 @@ function Login() {
                   placeholder="admin@cricpro.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2.5 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800/80 rounded-xl focus:outline-none focus:border-accent text-slate-800 dark:text-slate-250 text-xs placeholder-slate-450 dark:placeholder-slate-600 transition-colors"
+                  className="w-full pl-10 pr-4 py-2.5 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800/80 rounded-xl focus:outline-none focus:border-accent text-slate-800 dark:text-slate-200 text-xs placeholder-slate-455 dark:placeholder-slate-500 transition-colors"
                 />
               </div>
             </div>
@@ -111,7 +111,7 @@ function Login() {
                   placeholder="AdminPassword123"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full pl-10 pr-10 py-2.5 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800/80 rounded-xl focus:outline-none focus:border-accent text-slate-800 dark:text-slate-250 text-xs placeholder-slate-450 dark:placeholder-slate-600 transition-colors"
+                  className="w-full pl-10 pr-10 py-2.5 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800/80 rounded-xl focus:outline-none focus:border-accent text-slate-800 dark:text-slate-200 text-xs placeholder-slate-455 dark:placeholder-slate-500 transition-colors"
                 />
                 <button
                   type="button"

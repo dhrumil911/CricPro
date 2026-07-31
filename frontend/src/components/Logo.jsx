@@ -1,9 +1,13 @@
-import React from "react";
+import React, { useId } from "react";
 
 function Logo({ className = "h-8 w-auto", showText = true, textClass = "" }) {
+  const id = useId();
+  const blueGradId = `blueGrad-${id}`;
+  const goldGradId = `goldGrad-${id}`;
+
   return (
-    <div className="flex items-center gap-2.5 select-none text-left">
-      {/* Premium Minimal Cricket SaaS Icon */}
+    <div className="flex items-center gap-1.5 select-none text-left shrink-0">
+      {/* Refined Premium SaaS Cricket Logo */}
       <svg
         className={`${className} transition-colors duration-250`}
         viewBox="0 0 100 100"
@@ -11,86 +15,89 @@ function Logo({ className = "h-8 w-auto", showText = true, textClass = "" }) {
         xmlns="http://www.w3.org/2000/svg"
       >
         <defs>
-          <linearGradient id="blueGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <linearGradient id={blueGradId} x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stopColor="var(--logo-blue)" />
-            <stop offset="100%" stopColor="var(--logo-blue)" />
+            <stop offset="100%" stopColor="#3b82f6" />
           </linearGradient>
-          <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <linearGradient id={goldGradId} x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stopColor="var(--logo-gold)" />
-            <stop offset="100%" stopColor="var(--logo-gold)" />
+            <stop offset="100%" stopColor="#f59e0b" />
           </linearGradient>
-          <filter id="glowEffect" x="-20%" y="-20%" width="140%" height="140%">
-            <feGaussianBlur stdDeviation="1.5" result="blur" />
-            <feComposite in="SourceGraphic" in2="blur" operator="over" />
-          </filter>
         </defs>
 
-        {/* Circular motion orbit representing spin and progress */}
-        <circle
-          cx="50"
-          cy="50"
-          r="42"
-          stroke="url(#blueGrad)"
-          strokeWidth="3.5"
-          strokeDasharray="180 50"
-          className="opacity-90"
+        {/* Circular blue swoosh (Primary Swoosh, Thicker & 15% Larger) */}
+        <path 
+          d="M 28,87 A 41,41 0 1,1 87,43" 
+          stroke={`url(#${blueGradId})`} 
+          strokeWidth="9" 
+          strokeLinecap="round" 
+          fill="none" 
         />
-        <circle
-          cx="50"
-          cy="50"
-          r="34"
-          stroke="url(#goldGrad)"
-          strokeWidth="2.5"
-          strokeDasharray="80 120"
-          className="opacity-75"
-          transform="rotate(120 50 50)"
+        
+        {/* Minimal motion effect (Secondary Swoosh, Thicker & 15% Larger) */}
+        <path 
+          d="M 39,78 A 31,31 0 1,1 79,48" 
+          stroke={`url(#${blueGradId})`} 
+          strokeWidth="4" 
+          strokeLinecap="round" 
+          fill="none" 
+          opacity="0.4" 
         />
+        
+        {/* Rotated Gold Cricket Bat + Ball Group */}
+        <g transform="rotate(45 50 50)">
+          {/* Bat blade (Scales Up) */}
+          <rect 
+            x="43.5" 
+            y="36" 
+            width="13" 
+            height="38" 
+            rx="3.5" 
+            fill={`url(#${goldGradId})`} 
+            stroke="var(--bg-color)" 
+            strokeWidth="3" 
+          />
+          {/* Bat handle (Scales Up) */}
+          <rect 
+            x="48" 
+            y="10" 
+            width="4" 
+            height="27" 
+            rx="2" 
+            fill={`url(#${goldGradId})`} 
+            stroke="var(--bg-color)" 
+            strokeWidth="2" 
+          />
+          
+          {/* Handle details */}
+          <line x1="48.5" y1="16" x2="51.5" y2="16" stroke="var(--bg-color)" strokeWidth="1.2" />
+          <line x1="48.5" y1="21" x2="51.5" y2="21" stroke="var(--bg-color)" strokeWidth="1.2" />
 
-        {/* Cricket Stumps & Bails (gold) */}
-        <g stroke="url(#goldGrad)" strokeWidth="2.5" strokeLinecap="round">
-          {/* Stumps */}
-          <line x1="43" y1="36" x2="43" y2="64" />
-          <line x1="50" y1="33" x2="50" y2="67" />
-          <line x1="57" y1="36" x2="57" y2="64" />
-          {/* Bails */}
-          <line x1="41" y1="35" x2="49" y2="35" />
-          <line x1="51" y1="35" x2="59" y2="35" />
-        </g>
-
-        {/* Cricket Bat (Gold & Blue) */}
-        <path
-          d="M32 68 L24 76 C22.5 77.5 20 77.5 18.5 76 C17 74.5 17 72 18.5 70.5 L26.5 62.5 Z"
-          fill="url(#blueGrad)"
-          stroke="url(#goldGrad)"
-          strokeWidth="1.5"
-        />
-
-        {/* Cricket Ball with seam detail (white and gold seam, with glow) */}
-        <g filter="url(#glowEffect)">
-          <circle cx="68" cy="62" r="9" fill="var(--logo-white)" stroke="var(--glass-border)" strokeWidth="1" />
-          {/* Seam line */}
-          <path
-            d="M60 60 C64 57 72 67 76 64"
-            stroke="url(#goldGrad)"
-            strokeWidth="1.5"
-            strokeLinecap="round"
+          {/* Cricket Ball with Seam (Larger for visibility) */}
+          <circle 
+            cx="65.5" 
+            cy="54" 
+            r="8" 
+            fill="var(--logo-white)" 
+            stroke="var(--bg-color)" 
+            strokeWidth="2.5" 
+          />
+          <path 
+            d="M 60,58 A 8,8 0 0,1 71,47" 
+            stroke={`url(#${goldGradId})`} 
+            strokeWidth="1.5" 
+            strokeLinecap="round" 
+            fill="none" 
           />
         </g>
-
-        {/* Mini Gold Trophy overlay */}
-        <path
-          d="M47 62 H53 M50 62 V59 M46 54 H54 V59 C54 61.2 52.2 62 50 62 C47.8 62 46 61.2 46 59 Z"
-          stroke="url(#goldGrad)"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          fill="none"
-        />
       </svg>
 
-      {/* Product Wordmark */}
+      {/* Product Wordmark using Sora Font */}
       {showText && (
-        <span className={`font-display font-extrabold text-xl tracking-wider transition-colors duration-250 ${textClass || "text-[var(--logo-text-color)]"}`}>
+        <span 
+          className={`font-extrabold text-xl tracking-wide transition-colors duration-250 ${textClass || "text-[var(--logo-text-color)]"}`}
+          style={{ fontFamily: "'Sora', sans-serif" }}
+        >
           Cric<span className="text-[var(--logo-gold)]">Pro</span>
         </span>
       )}

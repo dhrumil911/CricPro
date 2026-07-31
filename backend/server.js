@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import { testConnection } from "./config/db.js";
 import authRoutes from "./routes/authRoutes.js";
 import dashboardRoutes from "./routes/dashboardRoutes.js";
+import tournamentRoutes from "./routes/tournamentRoutes.js";
 
 // Load environment variables
 dotenv.config();
@@ -13,12 +14,7 @@ const PORT = process.env.PORT || 5000;
 
 // Configure CORS middleware
 const corsOptions = {
-  origin: [
-    "http://localhost:5173",
-    "http://localhost:5174",
-    "http://localhost:5175"
-  ],
-  credentials: true,
+  origin: process.env.CLIENT_URL || "http://localhost:5173",
   optionsSuccessStatus: 200
 };
 
@@ -31,6 +27,7 @@ app.use(express.urlencoded({ extended: true }));
 // Register routes
 app.use("/api/auth", authRoutes);
 app.use("/api/dashboard", dashboardRoutes);
+app.use("/api/tournaments", tournamentRoutes);
 
 // Health Check Route
 app.get("/health", (req, res) => {

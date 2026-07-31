@@ -234,8 +234,9 @@ function Tournament() {
           {/* Header Action Row */}
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 text-left">
             <div>
-              <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100 flex items-center gap-2 font-display">
-                🏆 Tournament Management
+              <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100 flex items-center gap-2.5 font-display">
+                <Trophy className="w-6 h-6 text-accent dark:text-highlight shrink-0" />
+                Tournament Management
               </h1>
               <p className="text-slate-500 dark:text-slate-400 text-xs mt-1">
                 Configure formats, set default venues, manage timelines and verify completed tournament champions.
