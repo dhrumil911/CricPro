@@ -1,4 +1,4 @@
-import { Trophy, Users, User, Calendar } from "lucide-react";
+import { Trophy, Users, User, Calendar, CheckCircle, Clock } from "lucide-react";
 
 const getIcon = (title) => {
   switch (title.toLowerCase()) {
@@ -10,6 +10,10 @@ const getIcon = (title) => {
       return <User className="w-5 h-5 text-blue-500 dark:text-blue-400" />;
     case "matches":
       return <Calendar className="w-5 h-5 text-orange-500 dark:text-orange-400" />;
+    case "completed matches":
+      return <CheckCircle className="w-5 h-5 text-green-500 dark:text-green-400" />;
+    case "upcoming matches":
+      return <Clock className="w-5 h-5 text-yellow-500 dark:text-yellow-400" />;
     default:
       return <Trophy className="w-5 h-5 text-accent" />;
   }

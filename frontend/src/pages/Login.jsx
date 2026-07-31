@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { ShieldAlert, User, Lock, Eye, EyeOff, LayoutDashboard } from "lucide-react";
 import Logo from "../components/Logo";
+import { login } from "../services/api.js";
 
 function Login() {
   const navigate = useNavigate();
@@ -12,7 +13,7 @@ function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (email === "") {
@@ -32,12 +33,21 @@ function Login() {
       return;
     }
 
-    // Demo Login
-    if (email === "admin@cricpro.com" && password === "admin123") {
+    try {
       setError("");
-      navigate("/dashboard");
-    } else {
-      setError("Invalid email or password.");
+      const data = await login(email, password);
+      if (data.success) {
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("admin", JSON.stringify(data.admin));
+        navigate("/dashboard");
+      } else {
+        setError(data.message || "Invalid email or password.");
+      }
+    } catch (err) {
+      console.error("Login request error:", err);
+      setError(
+        err.response?.data?.message || "Connection to API server failed. Make sure the backend is online."
+      );
     }
   };
 
@@ -98,7 +108,7 @@ function Login() {
                 </span>
                 <input
                   type={showPassword ? "text" : "password"}
-                  placeholder="admin123"
+                  placeholder="AdminPassword123"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="w-full pl-10 pr-10 py-2.5 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800/80 rounded-xl focus:outline-none focus:border-accent text-slate-800 dark:text-slate-250 text-xs placeholder-slate-450 dark:placeholder-slate-600 transition-colors"
@@ -151,7 +161,7 @@ function Login() {
               <span className="font-semibold text-slate-800 dark:text-slate-200">Email:</span> admin@cricpro.com
             </div>
             <div className="text-[11px] text-slate-655 dark:text-slate-350">
-              <span className="font-semibold text-slate-800 dark:text-slate-200">Password:</span> admin123
+              <span className="font-semibold text-slate-800 dark:text-slate-200">Password:</span> AdminPassword123
             </div>
           </div>
 

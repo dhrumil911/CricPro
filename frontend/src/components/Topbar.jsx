@@ -108,8 +108,10 @@ function Topbar() {
                 <User className="w-4 h-4 text-accent dark:text-highlight" />
               </div>
             </div>
-            <div className="hidden md:block">
-              <div className="font-sans font-bold text-xs text-slate-800 dark:text-slate-200 leading-none">Dhrumil D.</div>
+            <div className="hidden md:block text-left">
+              <div className="font-sans font-bold text-xs text-slate-800 dark:text-slate-200 leading-none">
+                {localStorage.getItem("admin") ? JSON.parse(localStorage.getItem("admin")).name.split(" ")[0] + " " + (localStorage.getItem("admin") ? JSON.parse(localStorage.getItem("admin")).name.split(" ")[1]?.charAt(0) + "." : "") : "Dhrumil D."}
+              </div>
               <span className="font-sans text-[9px] text-slate-450 dark:text-slate-500 uppercase font-semibold block mt-0.5">Director</span>
             </div>
             <ChevronDown className="w-3.5 h-3.5 text-slate-550 dark:text-slate-450 hidden md:block" />
@@ -127,14 +129,18 @@ function Topbar() {
                   className="absolute right-0 mt-2.5 w-48 bg-white dark:bg-[#0f172a]/95 backdrop-blur-md rounded-xl border border-slate-200 dark:border-slate-800 shadow-2xl z-20 py-1 overflow-hidden"
                 >
                   <div className="px-4 py-2.5 border-b border-slate-100 dark:border-slate-850 text-left">
-                    <span className="font-sans font-bold text-xs text-slate-700 dark:text-slate-300 block">Dhrumil Dholakiya</span>
-                    <span className="font-sans text-[10px] text-slate-400 dark:text-slate-500">admin@cricpro.com</span>
+                    <span className="font-sans font-bold text-xs text-slate-700 dark:text-slate-330 block">
+                      {localStorage.getItem("admin") ? JSON.parse(localStorage.getItem("admin")).name : "Dhrumil Dholakiya"}
+                    </span>
+                    <span className="font-sans text-[10px] text-slate-400 dark:text-slate-500">
+                      {localStorage.getItem("admin") ? JSON.parse(localStorage.getItem("admin")).email : "admin@cricpro.com"}
+                    </span>
                   </div>
                   
                   <Link
                     to="/profile"
                     onClick={() => setShowProfileMenu(false)}
-                    className="flex items-center gap-2 px-4 py-2 text-xs text-slate-650 dark:text-slate-350 hover:bg-slate-50 dark:hover:bg-slate-800/40 hover:text-slate-900 dark:hover:text-slate-100 transition-colors text-left"
+                    className="flex items-center gap-2 px-4 py-2 text-xs text-slate-655 dark:text-slate-350 hover:bg-slate-50 dark:hover:bg-slate-800/40 hover:text-slate-900 dark:hover:text-slate-100 transition-colors text-left"
                   >
                     <User className="w-3.5 h-3.5" />
                     Admin Profile
@@ -142,7 +148,7 @@ function Topbar() {
                   <Link
                     to="/settings"
                     onClick={() => setShowProfileMenu(false)}
-                    className="flex items-center gap-2 px-4 py-2 text-xs text-slate-650 dark:text-slate-350 hover:bg-slate-50 dark:hover:bg-slate-800/40 hover:text-slate-900 dark:hover:text-slate-100 transition-colors text-left"
+                    className="flex items-center gap-2 px-4 py-2 text-xs text-slate-655 dark:text-slate-350 hover:bg-slate-50 dark:hover:bg-slate-800/40 hover:text-slate-900 dark:hover:text-slate-100 transition-colors text-left"
                   >
                     <Settings className="w-3.5 h-3.5" />
                     Settings
@@ -152,10 +158,12 @@ function Topbar() {
                   
                   <button
                     onClick={() => {
+                      localStorage.removeItem("token");
+                      localStorage.removeItem("admin");
                       setShowProfileMenu(false);
                       navigate("/");
                     }}
-                    className="flex items-center gap-2 w-full text-left px-4 py-2.5 text-xs text-danger hover:bg-red-500/10 transition-colors"
+                    className="flex items-center gap-2 w-full text-left px-4 py-2.5 text-xs text-danger hover:bg-red-500/10 transition-colors cursor-pointer"
                   >
                     <LogOut className="w-3.5 h-3.5" />
                     Logout
