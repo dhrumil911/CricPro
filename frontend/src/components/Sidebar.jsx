@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import Logo from "./Logo";
 import {
@@ -13,7 +13,6 @@ import {
   LogOut,
   ChevronLeft,
   ChevronRight,
-  Menu,
   X
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -36,16 +35,42 @@ function Sidebar() {
   ];
 
   const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("admin");
     navigate("/");
   };
 
   const isActive = (path) => location.pathname === path;
 
+  // Responsive Tablet Collapsing & Mobile Toggling Event Listeners
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 768 && window.innerWidth < 1024) {
+        setIsCollapsed(true);
+      } else if (window.innerWidth >= 1024) {
+        setIsCollapsed(false);
+      }
+    };
+    
+    window.addEventListener("resize", handleResize);
+    handleResize(); // Initial trigger
+
+    const handleToggle = () => {
+      setIsMobileOpen((prev) => !prev);
+    };
+    window.addEventListener("toggle-sidebar", handleToggle);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      window.removeEventListener("toggle-sidebar", handleToggle);
+    };
+  }, []);
+
   const sidebarContent = (
     <div className="flex flex-col h-full bg-white dark:bg-[#080f25] border-r border-slate-200 dark:border-slate-800/80 text-slate-700 dark:text-slate-350 transition-colors duration-300">
       {/* Brand Logo Header */}
       <div className="flex items-center justify-between p-4 border-b border-slate-200 dark:border-slate-850">
-        <Link to="/">
+        <Link to="/" onClick={() => setIsMobileOpen(false)}>
           <Logo
             className="h-8 w-auto text-slate-900 dark:text-slate-100"
             showText={!isCollapsed}
@@ -53,7 +78,7 @@ function Sidebar() {
           />
         </Link>
 
-        {/* Collapse button on Desktop */}
+        {/* Collapse button on Desktop/Tablet */}
         <button
           onClick={() => setIsCollapsed(!isCollapsed)}
           className="hidden md:flex p-1 rounded-lg bg-slate-100 dark:bg-slate-900 border border-slate-250 dark:border-slate-800 text-slate-500 dark:text-slate-400 hover:text-accent dark:hover:text-highlight hover:scale-105 active:scale-95 transition-all cursor-pointer"
@@ -71,6 +96,7 @@ function Sidebar() {
             <Link
               key={item.path}
               to={item.path}
+              onClick={() => setIsMobileOpen(false)}
               className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all duration-250 group relative ${
                 active
                   ? "bg-accent/10 dark:bg-accent/15 text-accent dark:text-highlight border-l-2 border-accent dark:border-highlight"
@@ -95,7 +121,7 @@ function Sidebar() {
       </nav>
 
       {/* Sidebar Footer / Logout */}
-      <div className="p-3 border-t border-slate-200 dark:border-slate-850">
+      <div className="p-3 border-t border-slate-200 dark:border-slate-855">
         <button
           onClick={handleLogout}
           className="flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 hover:bg-red-500/10 hover:text-danger transition-all duration-200 group relative cursor-pointer"
@@ -115,20 +141,7 @@ function Sidebar() {
 
   return (
     <>
-      {/* Mobile Top Header */}
-      <div className="md:hidden fixed top-0 left-0 right-0 h-16 bg-white dark:bg-[#020617] border-b border-slate-200 dark:border-slate-800/80 px-4 flex items-center justify-between z-40 transition-colors duration-300">
-        <Link to="/">
-          <Logo className="h-8 w-auto text-slate-900 dark:text-slate-100" textClass="text-slate-900 dark:text-slate-100" />
-        </Link>
-        <button
-          onClick={() => setIsMobileOpen(!isMobileOpen)}
-          className="p-2 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100"
-        >
-          {isMobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-        </button>
-      </div>
-
-      {/* Desktop Sidebar (hidden on mobile) */}
+      {/* Desktop/Tablet Sidebar (hidden on mobile) */}
       <div
         className={`hidden md:block h-screen sticky top-0 shrink-0 transition-all duration-300 z-30 ${
           isCollapsed ? "w-20" : "w-64"
@@ -171,9 +184,6 @@ function Sidebar() {
           </>
         )}
       </AnimatePresence>
-
-      {/* Spacer for mobile layout */}
-      <div className="md:hidden h-16 w-full" />
     </>
   );
 }

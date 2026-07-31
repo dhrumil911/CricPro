@@ -225,7 +225,7 @@ function MatchForm({ matches, setMatches, closeForm, editingMatch }) {
             </select>
           </div>
 
-          <div className="flex gap-3 pt-6 border-t border-slate-200 dark:border-slate-850">
+          <div className="flex flex-col sm:flex-row gap-3 pt-6 border-t border-slate-200 dark:border-slate-850">
             <button
               type="submit"
               className="flex-1 py-2.5 rounded-xl bg-accent text-slate-100 font-bold hover:bg-blue-600 hover:shadow-lg transition-all flex items-center justify-center gap-1.5 text-xs uppercase tracking-wider cursor-pointer"
@@ -236,7 +236,7 @@ function MatchForm({ matches, setMatches, closeForm, editingMatch }) {
             <button
               type="button"
               onClick={closeForm}
-              className="flex-1 py-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-855 transition-all text-xs uppercase tracking-wider cursor-pointer"
+              className="flex-1 py-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-850 transition-all text-xs uppercase tracking-wider cursor-pointer"
             >
               Cancel
             </button>

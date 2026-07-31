@@ -198,7 +198,7 @@ function PlayerForm({ players, setPlayers, closeForm, editingPlayer }) {
             </div>
           </div>
 
-          <div className="flex gap-3 pt-6 border-t border-slate-200 dark:border-slate-850">
+          <div className="flex flex-col sm:flex-row gap-3 pt-6 border-t border-slate-200 dark:border-slate-850">
             <button
               type="submit"
               className="flex-1 py-2.5 rounded-xl bg-accent text-slate-100 font-bold hover:bg-blue-600 hover:shadow-lg transition-all flex items-center justify-center gap-1.5 text-xs uppercase tracking-wider cursor-pointer"

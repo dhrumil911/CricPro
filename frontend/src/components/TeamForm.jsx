@@ -63,7 +63,7 @@ function TeamForm({ teams, setTeams, closeForm, editingTeam }) {
           </h2>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4 text-left">
+        <form onSubmit={handleSubmit} className="space-y-4 text-left max-h-[75vh] overflow-y-auto pr-1">
           <div className="space-y-1">
             <label className="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider block">Franchise Name</label>
             <div className="relative">
@@ -120,7 +120,7 @@ function TeamForm({ teams, setTeams, closeForm, editingTeam }) {
             </div>
           </div>
 
-          <div className="flex gap-3 pt-6 border-t border-slate-200 dark:border-slate-850">
+          <div className="flex flex-col sm:flex-row gap-3 pt-6 border-t border-slate-200 dark:border-slate-850">
             <button
               type="submit"
               className="flex-1 py-2.5 rounded-xl bg-accent text-slate-100 font-bold hover:bg-blue-600 hover:shadow-lg transition-all flex items-center justify-center gap-1.5 text-xs uppercase tracking-wider cursor-pointer"

@@ -1,68 +1,100 @@
-import { useState } from "react";
-import { X, Award, Save, Calendar, MapPin, Users } from "lucide-react";
+import { useState, useEffect } from "react";
+import { X, Award, Save, Calendar, MapPin, Users, Hash, FileText } from "lucide-react";
+import { createTournament, updateTournament } from "../services/api.js";
 
 function TournamentForm({
-  tournaments,
-  setTournaments,
   closeForm,
   editingTournament,
+  onSuccess
 }) {
   const [name, setName] = useState(editingTournament?.name || "");
-  const [type, setType] = useState(editingTournament?.type || "");
-  const [startDate, setStartDate] = useState(editingTournament?.startDate || "");
-  const [endDate, setEndDate] = useState(editingTournament?.endDate || "");
+  const [description, setDescription] = useState(editingTournament?.description || "");
+  const [format, setFormat] = useState(editingTournament?.format || "League");
+  const [startDate, setStartDate] = useState(editingTournament?.start_date || "");
+  const [endDate, setEndDate] = useState(editingTournament?.end_date || "");
   const [venue, setVenue] = useState(editingTournament?.venue || "");
-  const [teams, setTeams] = useState(editingTournament?.teams || "");
+  const [totalTeams, setTotalTeams] = useState(editingTournament?.total_teams || "");
+  const [overs, setOvers] = useState(editingTournament?.overs || "20");
+  const [status, setStatus] = useState(editingTournament?.status || "Upcoming");
+  const [winnerTeam, setWinnerTeam] = useState(editingTournament?.winner_team || "");
 
-  const handleSubmit = (e) => {
+  const [error, setError] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!name || !type || !startDate || !endDate || !venue || !teams) {
-      alert("Please fill all fields.");
+    // 1. Validation
+    if (!name.trim() || !format || !startDate || !endDate || !venue.trim() || !totalTeams || !overs) {
+      setError("Please fill all required fields.");
       return;
     }
 
-    const tournamentData = {
-      name,
-      type,
-      venue,
-      teams: Number(teams),
-      startDate,
-      endDate,
-      duration: `${startDate} - ${endDate}`,
-    };
+    const teamsNum = Number(totalTeams);
+    const oversNum = Number(overs);
 
-    if (editingTournament) {
-      const updatedTournaments = tournaments.map((tournament) =>
-        tournament.id === editingTournament.id
-          ? {
-              ...tournament,
-              ...tournamentData,
-            }
-          : tournament
-      );
-
-      setTournaments(updatedTournaments);
-      alert("Tournament updated successfully!");
-    } else {
-      const newTournament = {
-        id: Date.now(),
-        ...tournamentData,
-        status: "Upcoming",
-      };
-
-      setTournaments([...tournaments, newTournament]);
-      alert("Tournament added successfully!");
+    if (isNaN(teamsNum) || teamsNum <= 0) {
+      setError("Total teams must be a positive integer.");
+      return;
     }
 
-    closeForm();
+    if (isNaN(oversNum) || oversNum <= 0) {
+      setError("Overs must be a positive integer.");
+      return;
+    }
+
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    if (end < start) {
+      setError("End date must be greater than or equal to start date.");
+      return;
+    }
+
+    try {
+      setError("");
+      setSubmitting(true);
+
+      const payload = {
+        name: name.trim(),
+        description: description.trim() || null,
+        format,
+        venue: venue.trim(),
+        start_date: startDate,
+        end_date: endDate,
+        total_teams: teamsNum,
+        overs: oversNum,
+        status,
+        winner_team: status === "Completed" ? (winnerTeam.trim() || null) : null
+      };
+
+      let result;
+      if (editingTournament) {
+        result = await updateTournament(editingTournament.id, payload);
+      } else {
+        result = await createTournament(payload);
+      }
+
+      if (result.success) {
+        onSuccess(editingTournament ? "Tournament updated successfully!" : "Tournament created successfully!");
+        closeForm();
+      } else {
+        setError(result.message || "Failed to save tournament.");
+      }
+    } catch (err) {
+      console.error("TournamentForm action error:", err);
+      setError(
+        err.response?.data?.message || "Failed to communicate with API server. Please try again."
+      );
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={closeForm} />
 
-      <div className="relative w-full max-w-lg glass-card rounded-2xl border border-slate-200 dark:border-slate-800 shadow-2xl p-6 overflow-hidden z-10">
+      <div className="relative w-full max-w-lg glass-card rounded-2xl border border-slate-200 dark:border-slate-800 shadow-2xl p-6 overflow-y-auto max-h-[90vh] z-10">
         <div className="absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r from-accent to-highlight" />
         
         <button
@@ -80,8 +112,14 @@ function TournamentForm({
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4 text-left">
+          {error && (
+            <div className="p-3 bg-red-500/10 border border-red-500/20 text-danger text-xs font-bold rounded-xl">
+              {error}
+            </div>
+          )}
+
           <div className="space-y-1">
-            <label className="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider block">Tournament Name</label>
+            <label className="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider block">Tournament Name *</label>
             <input
               type="text"
               placeholder="e.g. Champions Cup T20"
@@ -91,20 +129,53 @@ function TournamentForm({
             />
           </div>
 
+          <div className="space-y-1">
+            <label className="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider block">Description</label>
+            <div className="relative">
+              <span className="absolute top-3 left-3 pointer-events-none">
+                <FileText className="w-4 h-4 text-slate-400 dark:text-slate-500" />
+              </span>
+              <textarea
+                placeholder="Brief summary of the tournament goals, sponsors, and guidelines..."
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                rows={2}
+                className="w-full pl-9 pr-4 py-2 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800/80 rounded-xl focus:outline-none focus:border-accent text-slate-800 dark:text-slate-200 text-xs placeholder-slate-450 dark:placeholder-slate-600 transition-colors"
+              />
+            </div>
+          </div>
+
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-1">
-              <label className="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider block">Tournament Format</label>
-              <input
-                type="text"
-                placeholder="e.g. League or Knockout"
-                value={type}
-                onChange={(e) => setType(e.target.value)}
-                className="w-full px-3.5 py-2.5 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800/80 rounded-xl focus:outline-none focus:border-accent text-slate-800 dark:text-slate-200 text-xs placeholder-slate-450 dark:placeholder-slate-600 transition-colors"
-              />
+              <label className="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider block">Format *</label>
+              <select
+                value={format}
+                onChange={(e) => setFormat(e.target.value)}
+                className="w-full px-3.5 py-2.5 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800/80 rounded-xl focus:outline-none focus:border-accent text-slate-800 dark:text-slate-205 text-xs transition-colors"
+              >
+                <option value="League">League</option>
+                <option value="Knockout">Knockout</option>
+                <option value="Group Stage">Group Stage</option>
+              </select>
             </div>
 
             <div className="space-y-1">
-              <label className="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider block">Total Teams</label>
+              <label className="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider block">Status *</label>
+              <select
+                value={status}
+                onChange={(e) => setStatus(e.target.value)}
+                className="w-full px-3.5 py-2.5 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800/80 rounded-xl focus:outline-none focus:border-accent text-slate-800 dark:text-slate-205 text-xs transition-colors"
+              >
+                <option value="Upcoming">Upcoming</option>
+                <option value="Ongoing">Ongoing</option>
+                <option value="Completed">Completed</option>
+              </select>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="space-y-1">
+              <label className="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider block">Total Teams *</label>
               <div className="relative">
                 <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <Users className="w-4 h-4 text-slate-400 dark:text-slate-500" />
@@ -112,8 +183,24 @@ function TournamentForm({
                 <input
                   type="number"
                   placeholder="e.g. 12"
-                  value={teams}
-                  onChange={(e) => setTeams(e.target.value)}
+                  value={totalTeams}
+                  onChange={(e) => setTotalTeams(e.target.value)}
+                  className="w-full pl-9 pr-4 py-2.5 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800/80 rounded-xl focus:outline-none focus:border-accent text-slate-800 dark:text-slate-200 text-xs placeholder-slate-450 dark:placeholder-slate-600 transition-colors"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-1">
+              <label className="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider block">Overs per Innings *</label>
+              <div className="relative">
+                <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Hash className="w-4 h-4 text-slate-400 dark:text-slate-500" />
+                </span>
+                <input
+                  type="number"
+                  placeholder="e.g. 20"
+                  value={overs}
+                  onChange={(e) => setOvers(e.target.value)}
                   className="w-full pl-9 pr-4 py-2.5 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800/80 rounded-xl focus:outline-none focus:border-accent text-slate-800 dark:text-slate-200 text-xs placeholder-slate-450 dark:placeholder-slate-600 transition-colors"
                 />
               </div>
@@ -122,7 +209,7 @@ function TournamentForm({
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-1">
-              <label className="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider block">Start Date</label>
+              <label className="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider block">Start Date *</label>
               <div className="relative">
                 <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <Calendar className="w-4 h-4 text-slate-400 dark:text-slate-500" />
@@ -137,7 +224,7 @@ function TournamentForm({
             </div>
 
             <div className="space-y-1">
-              <label className="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider block">End Date</label>
+              <label className="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider block">End Date *</label>
               <div className="relative">
                 <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <Calendar className="w-4 h-4 text-slate-400 dark:text-slate-500" />
@@ -153,7 +240,7 @@ function TournamentForm({
           </div>
 
           <div className="space-y-1">
-            <label className="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider block">Default Venue / Stadium</label>
+            <label className="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider block">Default Venue / Stadium *</label>
             <div className="relative">
               <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <MapPin className="w-4 h-4 text-slate-400 dark:text-slate-500" />
@@ -168,18 +255,32 @@ function TournamentForm({
             </div>
           </div>
 
-          <div className="flex gap-3 pt-6 border-t border-slate-200 dark:border-slate-850">
+          {status === "Completed" && (
+            <div className="space-y-1 animate-fadeIn">
+              <label className="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider block">Winner Team</label>
+              <input
+                type="text"
+                placeholder="e.g. Mumbai Indians"
+                value={winnerTeam}
+                onChange={(e) => setWinnerTeam(e.target.value)}
+                className="w-full px-3.5 py-2.5 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800/80 rounded-xl focus:outline-none focus:border-accent text-slate-800 dark:text-slate-200 text-xs placeholder-slate-450 dark:placeholder-slate-600 transition-colors"
+              />
+            </div>
+          )}
+
+          <div className="flex flex-col sm:flex-row gap-3 pt-6 border-t border-slate-200 dark:border-slate-850">
             <button
               type="submit"
-              className="flex-1 py-2.5 rounded-xl bg-accent text-slate-100 font-bold hover:bg-blue-600 hover:shadow-lg transition-all flex items-center justify-center gap-1.5 text-xs uppercase tracking-wider cursor-pointer"
+              disabled={submitting}
+              className="flex-1 py-2.5 rounded-xl bg-accent text-slate-100 font-bold hover:bg-blue-600 hover:shadow-lg disabled:opacity-50 transition-all flex items-center justify-center gap-1.5 text-xs uppercase tracking-wider cursor-pointer"
             >
               <Save className="w-4 h-4" />
-              {editingTournament ? "Update" : "Save"}
+              {submitting ? "Saving..." : editingTournament ? "Update" : "Save"}
             </button>
             <button
               type="button"
               onClick={closeForm}
-              className="flex-1 py-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-850 transition-all text-xs uppercase tracking-wider cursor-pointer"
+              className="flex-1 py-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-855 transition-all text-xs uppercase tracking-wider cursor-pointer font-sans"
             >
               Cancel
             </button>

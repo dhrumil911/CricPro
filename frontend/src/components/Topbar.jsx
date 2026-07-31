@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Bell, Search, User, ChevronDown, CheckCircle, Trophy, LogOut, Shield } from "lucide-react";
+import { Bell, Search, User, ChevronDown, CheckCircle, Trophy, LogOut, Shield, Menu } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import ThemeToggle from "./ThemeToggle";
+import Logo from "./Logo";
 
 function Topbar() {
   const navigate = useNavigate();
@@ -16,25 +17,40 @@ function Topbar() {
   ];
 
   return (
-    <header className="sticky top-0 z-20 flex items-center justify-between w-full h-16 px-6 bg-white/80 dark:bg-[#080f25]/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800/80 transition-colors">
-      {/* Search Input */}
-      <div className="relative w-64 md:w-80 max-w-lg hidden sm:block">
-        <span className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-          <Search className="w-4 h-4 text-slate-400 dark:text-slate-500" />
-        </span>
-        <input
-          type="text"
-          placeholder="Search tournaments, teams, players..."
-          className="w-full pl-9 pr-4 py-1.5 text-xs bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl focus:outline-none focus:border-accent text-slate-850 dark:text-slate-200 placeholder-slate-450 dark:placeholder-slate-550 transition-colors"
-        />
+    <header className="sticky top-0 z-20 flex items-center justify-between w-full h-16 px-4 md:px-6 bg-white/80 dark:bg-[#020617]/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800/80 transition-colors">
+      
+      {/* Left controls: search on desktop, hamburger & logo on mobile */}
+      <div className="flex items-center gap-3">
+        <button
+          onClick={() => window.dispatchEvent(new Event("toggle-sidebar"))}
+          className="md:hidden p-2 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 transition-colors cursor-pointer"
+        >
+          <Menu className="w-4.5 h-4.5" />
+        </button>
+        <Link to="/dashboard" className="md:hidden block shrink-0">
+          <Logo className="h-7 w-auto text-slate-900 dark:text-slate-100" showText={false} />
+        </Link>
+        
+        {/* Desktop Search Input */}
+        <div className="relative w-64 md:w-80 max-w-lg hidden md:block">
+          <span className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+            <Search className="w-4 h-4 text-slate-400 dark:text-slate-500" />
+          </span>
+          <input
+            type="text"
+            placeholder="Search tournaments, teams, players..."
+            className="w-full pl-9 pr-4 py-1.5 text-xs bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl focus:outline-none focus:border-accent text-slate-855 dark:text-slate-200 placeholder-slate-455 dark:placeholder-slate-550 transition-colors"
+          />
+        </div>
       </div>
 
-      <div className="sm:hidden font-display font-bold text-xs uppercase tracking-wider text-slate-700 dark:text-slate-350">
-        Admin <span className="text-accent">Panel</span>
+      {/* Mobile Branding Text when no search bar is active */}
+      <div className="md:hidden font-display font-extrabold text-xs uppercase tracking-widest text-slate-700 dark:text-slate-350 select-none">
+        Cric<span className="text-accent">Pro</span>
       </div>
 
       {/* Right controls */}
-      <div className="flex items-center gap-3.5 ml-auto">
+      <div className="flex items-center gap-3 ml-auto shrink-0">
         {/* Reusable Theme Toggle */}
         <ThemeToggle />
 
@@ -61,9 +77,9 @@ function Topbar() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 10 }}
                   transition={{ duration: 0.15 }}
-                  className="absolute right-0 mt-2.5 w-80 bg-white dark:bg-[#0f172a]/95 backdrop-blur-md rounded-xl border border-slate-200 dark:border-slate-800 shadow-2xl z-20 py-1 overflow-hidden"
+                  className="absolute right-0 mt-2.5 w-72 sm:w-80 bg-white dark:bg-[#0f172a]/95 backdrop-blur-md rounded-xl border border-slate-200 dark:border-slate-800 shadow-2xl z-20 py-1 overflow-hidden"
                 >
-                  <div className="px-4 py-2 border-b border-slate-100 dark:border-slate-850 flex items-center justify-between">
+                  <div className="px-4 py-2 border-b border-slate-100 dark:border-slate-855 flex items-center justify-between">
                     <span className="font-display font-bold text-xs text-slate-700 dark:text-slate-200 uppercase tracking-wider">Notifications</span>
                     <span className="text-[9px] text-accent font-bold px-2 py-0.5 bg-accent/10 rounded-full">New</span>
                   </div>
@@ -78,7 +94,7 @@ function Topbar() {
                             </div>
                             <div className="flex-1 min-w-0">
                               <h4 className="font-sans font-semibold text-xs text-slate-800 dark:text-slate-200 truncate">{notif.title}</h4>
-                              <p className="font-sans text-[10px] text-slate-500 dark:text-slate-450 leading-normal mt-0.5">{notif.desc}</p>
+                              <p className="font-sans text-[10px] text-slate-500 dark:text-slate-455 leading-normal mt-0.5">{notif.desc}</p>
                               <span className="text-[9px] text-slate-400 dark:text-slate-500 mt-1 block font-mono">{notif.time}</span>
                             </div>
                           </div>
@@ -103,7 +119,7 @@ function Topbar() {
             }}
             className="flex items-center gap-2.5 text-left hover:opacity-90 transition-opacity"
           >
-            <div className="relative w-8 h-8 rounded-xl bg-gradient-to-br from-accent to-highlight p-0.5">
+            <div className="relative w-8 h-8 rounded-xl bg-gradient-to-br from-accent to-highlight p-0.5 animate-gradient">
               <div className="flex items-center justify-center w-full h-full bg-white dark:bg-[#020617] rounded-[10px]">
                 <User className="w-4 h-4 text-accent dark:text-highlight" />
               </div>
@@ -112,7 +128,7 @@ function Topbar() {
               <div className="font-sans font-bold text-xs text-slate-800 dark:text-slate-200 leading-none">
                 {localStorage.getItem("admin") ? JSON.parse(localStorage.getItem("admin")).name.split(" ")[0] + " " + (localStorage.getItem("admin") ? JSON.parse(localStorage.getItem("admin")).name.split(" ")[1]?.charAt(0) + "." : "") : "Dhrumil D."}
               </div>
-              <span className="font-sans text-[9px] text-slate-450 dark:text-slate-500 uppercase font-semibold block mt-0.5">Director</span>
+              <span className="font-sans text-[9px] text-slate-455 dark:text-slate-500 uppercase font-semibold block mt-0.5">Director</span>
             </div>
             <ChevronDown className="w-3.5 h-3.5 text-slate-550 dark:text-slate-450 hidden md:block" />
           </button>
@@ -173,7 +189,6 @@ function Topbar() {
             )}
           </AnimatePresence>
         </div>
-
       </div>
     </header>
   );

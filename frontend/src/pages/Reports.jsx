@@ -173,7 +173,7 @@ function Reports() {
           </div>
 
           {/* Stats Grid Counters */}
-          <div className="grid grid-cols-2 lg:grid-cols-6 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
             <StatCard title="Total Tournaments" value={stats.totalTournaments} icon="🏆" />
             <StatCard title="Total Teams" value={stats.totalTeams} icon="👥" />
             <StatCard title="Total Players" value={stats.totalPlayers} icon="🏏" />

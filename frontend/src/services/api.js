@@ -54,11 +54,48 @@ export const getDashboardCharts = async () => {
   return response.data;
 };
 
+// Tournament Services
+export const getTournaments = async (params) => {
+  const response = await API.get("/tournaments", { params });
+  return response.data;
+};
+
+export const getTournamentById = async (id) => {
+  const response = await API.get(`/tournaments/${id}`);
+  return response.data;
+};
+
+export const createTournament = async (data) => {
+  const response = await API.post("/tournaments", data);
+  return response.data;
+};
+
+export const updateTournament = async (id, data) => {
+  const response = await API.put(`/tournaments/${id}`, data);
+  return response.data;
+};
+
+export const deleteTournamentApi = async (id) => {
+  const response = await API.delete(`/tournaments/${id}`);
+  return response.data;
+};
+
+export const getTournamentStats = async () => {
+  const response = await API.get("/tournaments/stats");
+  return response.data;
+};
+
 export default {
   login,
   getProfile,
   getDashboardStats,
   getDashboardMatches,
   getDashboardLeaders,
-  getDashboardCharts
+  getDashboardCharts,
+  getTournaments,
+  getTournamentById,
+  createTournament,
+  updateTournament,
+  deleteTournamentApi,
+  getTournamentStats
 };
