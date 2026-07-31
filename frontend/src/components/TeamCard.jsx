@@ -1,4 +1,4 @@
-import { Edit, Trash, User, MapPin, Shield, Users } from "lucide-react";
+import { Edit, Trash, User, MapPin, Shield, Calendar, Award } from "lucide-react";
 
 function TeamCard({ team, deleteTeam, editTeam }) {
   return (
@@ -10,12 +10,20 @@ function TeamCard({ team, deleteTeam, editTeam }) {
       <div className="space-y-4">
         {/* Title and status */}
         <div className="flex justify-between items-start">
-          <div className="text-left">
-            <h3 className="font-display font-bold text-base text-slate-850 dark:text-slate-200 tracking-wide flex items-center gap-1.5">
-              <Shield className="w-4.5 h-4.5 text-accent" />
-              {team.name}
-            </h3>
-            <span className="text-[10px] text-slate-500 font-semibold uppercase mt-0.5 block">{team.city} franchise</span>
+          <div className="text-left flex items-start gap-2.5">
+            <div className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center font-bold text-accent dark:text-highlight shrink-0 overflow-hidden select-none">
+              {team.logo ? (
+                <img src={team.logo} alt={team.short_name} className="w-full h-full object-cover" onError={(e) => { e.target.style.display = 'none'; }} />
+              ) : (
+                <Shield className="w-5 h-5" />
+              )}
+            </div>
+            <div>
+              <h3 className="font-display font-bold text-sm text-slate-850 dark:text-slate-200 tracking-wide flex items-center gap-1.5">
+                {team.team_name}
+              </h3>
+              <span className="text-[10px] text-slate-500 font-semibold uppercase mt-0.5 block">Short Name: {team.short_name}</span>
+            </div>
           </div>
 
           <span className={`text-[10px] font-semibold px-2 py-0.5 border rounded-full ${
@@ -31,19 +39,25 @@ function TeamCard({ team, deleteTeam, editTeam }) {
         <div className="space-y-2 border-t border-slate-200 dark:border-slate-850 pt-3 text-xs text-slate-655 dark:text-slate-400 text-left">
           <div className="flex items-center gap-2">
             <User className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500 shrink-0" />
-            <span><strong className="text-slate-800 dark:text-slate-300">Captain:</strong> {team.captain}</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <MapPin className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500 shrink-0" />
-            <span><strong className="text-slate-800 dark:text-slate-300">City:</strong> {team.city}</span>
+            <span><strong className="text-slate-800 dark:text-slate-300">Captain:</strong> {team.captain || "Not Assigned"}</span>
           </div>
           <div className="flex items-center gap-2">
             <User className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500 shrink-0" />
-            <span><strong className="text-slate-800 dark:text-slate-300">Coach:</strong> {team.coach}</span>
+            <span><strong className="text-slate-800 dark:text-slate-300">Coach:</strong> {team.coach || "Not Assigned"}</span>
           </div>
           <div className="flex items-center gap-2">
-            <Users className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500 shrink-0" />
-            <span><strong className="text-slate-800 dark:text-slate-300">Squad Size:</strong> {team.totalPlayers} Players</span>
+            <MapPin className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500 shrink-0" />
+            <span><strong className="text-slate-800 dark:text-slate-300">Home Ground:</strong> {team.home_ground || "Not Assigned"}</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <Calendar className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500 shrink-0" />
+            <span><strong className="text-slate-800 dark:text-slate-300">Founded Year:</strong> {team.founded_year || "N/A"}</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <Award className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500 shrink-0" />
+            <span>
+              <strong className="text-slate-800 dark:text-slate-300">Stats:</strong> {team.points} Pts | NRR {team.nrr}
+            </span>
           </div>
         </div>
       </div>

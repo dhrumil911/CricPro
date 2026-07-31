@@ -85,6 +85,42 @@ export const getTournamentStats = async () => {
   return response.data;
 };
 
+// Team Services
+export const getTeams = async (params) => {
+  const response = await API.get("/teams", { params });
+  return response.data;
+};
+
+export const getTeamById = async (id) => {
+  const response = await API.get(`/teams/${id}`);
+  return response.data;
+};
+
+export const createTeam = async (data) => {
+  const response = await API.post("/teams", data);
+  return response.data;
+};
+
+export const updateTeam = async (id, data) => {
+  const response = await API.put(`/teams/${id}`, data);
+  return response.data;
+};
+
+export const deleteTeamApi = async (id) => {
+  const response = await API.delete(`/teams/${id}`);
+  return response.data;
+};
+
+export const getTeamStats = async () => {
+  const response = await API.get("/teams/stats");
+  return response.data;
+};
+
+export const getTeamDropdown = async () => {
+  const response = await API.get("/teams/dropdown");
+  return response.data;
+};
+
 export default {
   login,
   getProfile,
@@ -97,5 +133,12 @@ export default {
   createTournament,
   updateTournament,
   deleteTournamentApi,
-  getTournamentStats
+  getTournamentStats,
+  getTeams,
+  getTeamById,
+  createTeam,
+  updateTeam,
+  deleteTeamApi,
+  getTeamStats,
+  getTeamDropdown
 };

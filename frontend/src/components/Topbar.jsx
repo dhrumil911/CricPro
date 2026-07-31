@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Bell, Search, User, ChevronDown, CheckCircle, Trophy, LogOut, Shield, Menu } from "lucide-react";
+import { Bell, Search, User, ChevronDown, CheckCircle, Trophy, LogOut, Shield, Menu, Settings } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import ThemeToggle from "./ThemeToggle";
 import Logo from "./Logo";

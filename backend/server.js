@@ -5,6 +5,7 @@ import { testConnection } from "./config/db.js";
 import authRoutes from "./routes/authRoutes.js";
 import dashboardRoutes from "./routes/dashboardRoutes.js";
 import tournamentRoutes from "./routes/tournamentRoutes.js";
+import teamRoutes from "./routes/teamRoutes.js";
 
 // Load environment variables
 dotenv.config();
@@ -28,6 +29,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/api/auth", authRoutes);
 app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/tournaments", tournamentRoutes);
+app.use("/api/teams", teamRoutes);
 
 // Health Check Route
 app.get("/health", (req, res) => {

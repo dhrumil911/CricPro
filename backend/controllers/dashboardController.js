@@ -46,7 +46,7 @@ export const getDashboardMatches = async (req, res) => {
     // 1. Fetch recent completed matches
     const [recent] = await db.query(`
       SELECT m.id, DATE_FORMAT(m.match_date, '%Y-%m-%d') AS date, m.match_time AS time, m.venue, m.status, m.result, m.team_a_score, m.team_b_score,
-             t1.name AS teamA, t2.name AS teamB, tr.name AS tournamentName
+             t1.short_name AS teamA, t2.short_name AS teamB, tr.name AS tournamentName
       FROM matches m
       JOIN teams t1 ON m.team_a_id = t1.id
       JOIN teams t2 ON m.team_b_id = t2.id
@@ -59,7 +59,7 @@ export const getDashboardMatches = async (req, res) => {
     // 2. Fetch upcoming fixtures
     const [upcoming] = await db.query(`
       SELECT m.id, DATE_FORMAT(m.match_date, '%Y-%m-%d') AS date, m.match_time AS time, m.venue, m.status,
-             t1.name AS teamA, t2.name AS teamB, tr.name AS tournamentName
+             t1.short_name AS teamA, t2.short_name AS teamB, tr.name AS tournamentName
       FROM matches m
       JOIN teams t1 ON m.team_a_id = t1.id
       JOIN teams t2 ON m.team_b_id = t2.id
@@ -72,7 +72,7 @@ export const getDashboardMatches = async (req, res) => {
     // 3. Fetch live match details (single main highlight match)
     const [liveMatches] = await db.query(`
       SELECT m.id, DATE_FORMAT(m.match_date, '%Y-%m-%d') AS date, m.match_time AS time, m.venue, m.status, m.result, m.team_a_score, m.team_b_score, m.overs,
-             t1.name AS teamA, t2.name AS teamB, tr.name AS tournamentName
+             t1.short_name AS teamA, t2.short_name AS teamB, tr.name AS tournamentName
       FROM matches m
       JOIN teams t1 ON m.team_a_id = t1.id
       JOIN teams t2 ON m.team_b_id = t2.id
@@ -108,7 +108,7 @@ export const getDashboardLeaders = async (req, res) => {
   try {
     // Top Scorer
     const [[topScorer]] = await db.query(`
-      SELECT p.name, p.runs, p.strike_rate AS strikeRate, t.name AS teamName
+      SELECT p.name, p.runs, p.strike_rate AS strikeRate, t.short_name AS teamName
       FROM players p
       LEFT JOIN teams t ON p.team_id = t.id
       ORDER BY p.runs DESC
@@ -117,7 +117,7 @@ export const getDashboardLeaders = async (req, res) => {
 
     // Top Wicket Taker
     const [[topWicketTaker]] = await db.query(`
-      SELECT p.name, p.wickets, p.economy, t.name AS teamName
+      SELECT p.name, p.wickets, p.economy, t.short_name AS teamName
       FROM players p
       LEFT JOIN teams t ON p.team_id = t.id
       ORDER BY p.wickets DESC
@@ -126,7 +126,7 @@ export const getDashboardLeaders = async (req, res) => {
 
     // Most Sixes
     const [[mostSixes]] = await db.query(`
-      SELECT p.name, p.sixes, t.name AS teamName
+      SELECT p.name, p.sixes, t.short_name AS teamName
       FROM players p
       LEFT JOIN teams t ON p.team_id = t.id
       ORDER BY p.sixes DESC
@@ -135,7 +135,7 @@ export const getDashboardLeaders = async (req, res) => {
 
     // Most Fours
     const [[mostFours]] = await db.query(`
-      SELECT p.name, p.fours, t.name AS teamName
+      SELECT p.name, p.fours, t.short_name AS teamName
       FROM players p
       LEFT JOIN teams t ON p.team_id = t.id
       ORDER BY p.fours DESC
@@ -144,7 +144,7 @@ export const getDashboardLeaders = async (req, res) => {
 
     // Best Strike Rate (min 100 runs)
     const [[bestStrikeRate]] = await db.query(`
-      SELECT p.name, p.strike_rate AS strikeRate, p.runs, t.name AS teamName
+      SELECT p.name, p.strike_rate AS strikeRate, p.runs, t.short_name AS teamName
       FROM players p
       LEFT JOIN teams t ON p.team_id = t.id
       WHERE p.runs >= 100
@@ -154,7 +154,7 @@ export const getDashboardLeaders = async (req, res) => {
 
     // Best Economy (min 5 matches played)
     const [[bestEconomy]] = await db.query(`
-      SELECT p.name, p.economy, p.wickets, t.name AS teamName
+      SELECT p.name, p.economy, p.wickets, t.short_name AS teamName
       FROM players p
       LEFT JOIN teams t ON p.team_id = t.id
       WHERE p.matches_played >= 5
@@ -208,7 +208,7 @@ export const getDashboardCharts = async (req, res) => {
 
     // 2. Team Performance (Wins)
     const [teamRows] = await db.query(`
-      SELECT name, wins AS Wins
+      SELECT short_name AS name, wins AS Wins
       FROM teams
       ORDER BY wins DESC
       LIMIT 5

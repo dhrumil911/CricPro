@@ -83,25 +83,28 @@ const seedDatabase = async () => {
     // 5. Seed Teams
     console.log("⏳ Seeding teams...");
     const teams = [
-      ["MI", "Mumbai Indians", "mi_logo.png", 10, 4, 20, 0.852],
-      ["CSK", "Chennai Super Kings", "csk_logo.png", 8, 6, 16, 0.420],
-      ["RCB", "Royal Challengers Bengaluru", "rcb_logo.png", 7, 7, 14, -0.125],
-      ["GT", "Gujarat Titans", "gt_logo.png", 7, 7, 14, 0.102],
-      ["KKR", "Kolkata Knight Riders", "kkr_logo.png", 6, 8, 12, -0.320]
+      ["Mumbai Indians", "MI", "mi_logo.png", "Hardik Pandya", "Mark Boucher", "Wankhede Stadium", 2008, "Five-time IPL champions based in Mumbai.", "Active", 10, 4, 20, 0.852],
+      ["Chennai Super Kings", "CSK", "csk_logo.png", "Ruturaj Gaikwad", "Stephen Fleming", "M.A. Chidambaram Stadium", 2008, "Five-time IPL champions based in Chennai.", "Active", 8, 6, 16, 0.420],
+      ["Royal Challengers Bengaluru", "RCB", "rcb_logo.png", "Faf du Plessis", "Andy Flower", "M. Chinnaswamy Stadium", 2008, "Popular franchise based in Bengaluru.", "Active", 7, 7, 14, -0.125],
+      ["Gujarat Titans", "GT", "gt_logo.png", "Shubman Gill", "Ashish Nehra", "Narendra Modi Stadium", 2021, "IPL 2022 champions based in Ahmedabad.", "Active", 7, 7, 14, 0.102],
+      ["Kolkata Knight Riders", "KKR", "kkr_logo.png", "Shreyas Iyer", "Chandrakant Pandit", "Eden Gardens", 2008, "Three-time IPL champions based in Kolkata.", "Active", 6, 8, 12, -0.320],
+      ["Rajasthan Royals", "RR", "rr_logo.png", "Sanju Samson", "Kumar Sangakkara", "Sawai Mansingh Stadium", 2008, "Inaugural IPL champions based in Jaipur.", "Active", 8, 6, 16, 0.250],
+      ["Lucknow Super Giants", "LSG", "lsg_logo.png", "KL Rahul", "Justin Langer", "Ekana Cricket Stadium", 2021, "Lucknow-based IPL franchise.", "Active", 6, 8, 12, -0.110],
+      ["Sunrisers Hyderabad", "SRH", "srh_logo.png", "Pat Cummins", "Daniel Vettori", "Rajiv Gandhi Intl Stadium", 2012, "IPL 2016 champions based in Hyderabad.", "Active", 9, 5, 18, 0.560]
     ];
     for (const team of teams) {
       await connection.query(
-        "INSERT INTO teams (name, fullname, logo, wins, losses, points, nrr) VALUES (?, ?, ?, ?, ?, ?, ?)",
+        "INSERT INTO teams (team_name, short_name, logo, captain, coach, home_ground, founded_year, description, status, wins, losses, points, nrr) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
         team
       );
     }
 
     // Get team IDs
-    const [[{ id: miId }]] = await connection.query("SELECT id FROM teams WHERE name = 'MI'");
-    const [[{ id: cskId }]] = await connection.query("SELECT id FROM teams WHERE name = 'CSK'");
-    const [[{ id: rcbId }]] = await connection.query("SELECT id FROM teams WHERE name = 'RCB'");
-    const [[{ id: gtId }]] = await connection.query("SELECT id FROM teams WHERE name = 'GT'");
-    const [[{ id: kkrId }]] = await connection.query("SELECT id FROM teams WHERE name = 'KKR'");
+    const [[{ id: miId }]] = await connection.query("SELECT id FROM teams WHERE short_name = 'MI'");
+    const [[{ id: cskId }]] = await connection.query("SELECT id FROM teams WHERE short_name = 'CSK'");
+    const [[{ id: rcbId }]] = await connection.query("SELECT id FROM teams WHERE short_name = 'RCB'");
+    const [[{ id: gtId }]] = await connection.query("SELECT id FROM teams WHERE short_name = 'GT'");
+    const [[{ id: kkrId }]] = await connection.query("SELECT id FROM teams WHERE short_name = 'KKR'");
 
     // 6. Seed Players
     console.log("⏳ Seeding players...");

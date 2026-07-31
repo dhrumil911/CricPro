@@ -32,9 +32,15 @@ CREATE TABLE IF NOT EXISTS tournaments (
 -- Teams table
 CREATE TABLE IF NOT EXISTS teams (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  name VARCHAR(100) UNIQUE NOT NULL, -- e.g. MI, CSK, RCB, GT, KKR
-  fullname VARCHAR(255) NOT NULL,
-  logo VARCHAR(255),
+  team_name VARCHAR(255) UNIQUE NOT NULL,
+  short_name VARCHAR(50) UNIQUE NOT NULL,
+  logo VARCHAR(255) DEFAULT NULL,
+  captain VARCHAR(255) DEFAULT NULL,
+  coach VARCHAR(255) DEFAULT NULL,
+  home_ground VARCHAR(255) DEFAULT NULL,
+  founded_year INT DEFAULT NULL,
+  description TEXT DEFAULT NULL,
+  status ENUM('Active','Inactive') DEFAULT 'Active',
   wins INT DEFAULT 0,
   losses INT DEFAULT 0,
   points INT DEFAULT 0,
