@@ -121,6 +121,42 @@ export const getTeamDropdown = async () => {
   return response.data;
 };
 
+// Player Services
+export const getPlayers = async (params) => {
+  const response = await API.get("/players", { params });
+  return response.data;
+};
+
+export const getPlayerById = async (id) => {
+  const response = await API.get(`/players/${id}`);
+  return response.data;
+};
+
+export const createPlayer = async (data) => {
+  const response = await API.post("/players", data);
+  return response.data;
+};
+
+export const updatePlayer = async (id, data) => {
+  const response = await API.put(`/players/${id}`, data);
+  return response.data;
+};
+
+export const deletePlayerApi = async (id) => {
+  const response = await API.delete(`/players/${id}`);
+  return response.data;
+};
+
+export const getPlayerStats = async () => {
+  const response = await API.get("/players/stats");
+  return response.data;
+};
+
+export const getPlayerDropdown = async () => {
+  const response = await API.get("/players/dropdown");
+  return response.data;
+};
+
 export default {
   login,
   getProfile,
@@ -140,5 +176,12 @@ export default {
   updateTeam,
   deleteTeamApi,
   getTeamStats,
-  getTeamDropdown
+  getTeamDropdown,
+  getPlayers,
+  getPlayerById,
+  createPlayer,
+  updatePlayer,
+  deletePlayerApi,
+  getPlayerStats,
+  getPlayerDropdown
 };
