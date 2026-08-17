@@ -12,7 +12,7 @@ const __dirname = path.dirname(__filename);
 dotenv.config({ path: path.join(__dirname, "../.env") });
 
 const seedDatabase = async () => {
-  const host = process.env.DB_HOST || "localhost";
+  const host = process.env.DB_HOST || "127.0.0.1";
   const user = process.env.DB_USER || "root";
   const password = process.env.DB_PASSWORD || "";
   const dbName = process.env.DB_NAME || "cricpro_db";
@@ -105,24 +105,72 @@ const seedDatabase = async () => {
     const [[{ id: rcbId }]] = await connection.query("SELECT id FROM teams WHERE short_name = 'RCB'");
     const [[{ id: gtId }]] = await connection.query("SELECT id FROM teams WHERE short_name = 'GT'");
     const [[{ id: kkrId }]] = await connection.query("SELECT id FROM teams WHERE short_name = 'KKR'");
+    const [[{ id: rrId }]] = await connection.query("SELECT id FROM teams WHERE short_name = 'RR'");
+    const [[{ id: lsgId }]] = await connection.query("SELECT id FROM teams WHERE short_name = 'LSG'");
+    const [[{ id: srhId }]] = await connection.query("SELECT id FROM teams WHERE short_name = 'SRH'");
 
-    // 6. Seed Players
+    // 6. Seed Players (40 realistic IPL players across all 8 teams)
     console.log("⏳ Seeding players...");
     const players = [
-      ["Rohit Sharma", miId, "Batsman", 450, 0, 24, 38, 135.50, 0.00, 14],
-      ["Jasprit Bumrah", miId, "Bowler", 25, 22, 1, 2, 90.00, 6.45, 14],
-      ["MS Dhoni", cskId, "Wicket-keeper", 280, 0, 18, 15, 155.60, 0.00, 14],
-      ["Ravindra Jadeja", cskId, "All-rounder", 210, 14, 10, 12, 125.00, 7.20, 14],
-      ["Virat Kohli", rcbId, "Batsman", 620, 0, 28, 52, 142.80, 0.00, 14],
-      ["Mohammed Siraj", rcbId, "Bowler", 12, 16, 0, 1, 65.00, 8.10, 14],
-      ["Shubman Gill", gtId, "Batsman", 510, 0, 15, 45, 138.20, 0.00, 14],
-      ["Rashid Khan", gtId, "Bowler", 110, 18, 8, 6, 145.00, 6.80, 14],
-      ["Shreyas Iyer", kkrId, "Batsman", 390, 0, 12, 30, 128.50, 0.00, 14],
-      ["Sunil Narine", kkrId, "All-rounder", 180, 15, 12, 14, 165.20, 6.15, 14]
+      // MI (Mumbai Indians)
+      ["Rohit Sharma", miId, "rohit.png", 45, "Batsman", "Right-hand bat", "Right-arm offbreak", "1987-04-30", "Indian", 250, 6200, 15, 260, 550, 130.50, 7.80, "Active"],
+      ["Jasprit Bumrah", miId, "bumrah.png", 93, "Bowler", "Right-hand bat", "Right-arm fast", "1993-12-06", "Indian", 130, 80, 160, 1, 5, 90.00, 6.45, "Active"],
+      ["Hardik Pandya", miId, "hardik.png", 33, "All-rounder", "Right-hand bat", "Right-arm fast-medium", "1993-10-11", "Indian", 140, 2500, 60, 120, 180, 145.00, 8.20, "Active"],
+      ["Suryakumar Yadav", miId, "sky.png", 77, "Batsman", "Right-hand bat", "Right-arm offbreak", "1990-09-14", "Indian", 150, 3500, 0, 160, 320, 143.50, 0.00, "Active"],
+      ["Ishan Kishan", miId, "ishan.png", 23, "Wicket-keeper", "Left-hand bat", "None", "1998-07-18", "Indian", 100, 2600, 0, 110, 240, 134.20, 0.00, "Active"],
+
+      // CSK (Chennai Super Kings)
+      ["MS Dhoni", cskId, "dhoni.png", 7, "Wicket-keeper", "Right-hand bat", "Right-arm medium", "1981-07-07", "Indian", 264, 5200, 0, 250, 360, 137.50, 0.00, "Active"],
+      ["Ruturaj Gaikwad", cskId, "ruturaj.png", 31, "Batsman", "Right-hand bat", "Right-arm offbreak", "1997-01-31", "Indian", 60, 2200, 0, 80, 210, 135.20, 0.00, "Active"],
+      ["Ravindra Jadeja", cskId, "jadeja.png", 8, "All-rounder", "Left-hand bat", "Left-arm orthodox", "1988-12-06", "Indian", 240, 2950, 160, 100, 200, 128.80, 7.60, "Active"],
+      ["Matheesha Pathirana", cskId, "pathirana.png", 99, "Bowler", "Right-hand bat", "Right-arm fast", "2002-12-18", "Sri Lankan", 30, 10, 50, 0, 1, 85.00, 7.80, "Injured"],
+      ["Shivam Dube", cskId, "dube.png", 27, "All-rounder", "Left-hand bat", "Right-arm medium", "1993-06-26", "Indian", 60, 1400, 5, 90, 110, 142.10, 8.50, "Active"],
+
+      // RCB (Royal Challengers Bengaluru)
+      ["Virat Kohli", rcbId, "kohli.png", 18, "Batsman", "Right-hand bat", "Right-arm medium", "1988-11-05", "Indian", 252, 8000, 4, 270, 700, 130.20, 8.80, "Active"],
+      ["Faf du Plessis", rcbId, "faf.png", 13, "Batsman", "Right-hand bat", "Right-arm legbreak", "1984-07-13", "South African", 140, 4500, 0, 150, 410, 134.00, 0.00, "Active"],
+      ["Glenn Maxwell", rcbId, "maxwell.png", 32, "All-rounder", "Right-hand bat", "Right-arm offbreak", "1988-10-14", "Australian", 130, 2800, 35, 160, 220, 156.50, 8.10, "Active"],
+      ["Mohammed Siraj", rcbId, "siraj.png", 73, "Bowler", "Right-hand bat", "Right-arm fast", "1994-03-13", "Indian", 90, 80, 100, 2, 6, 85.00, 8.30, "Active"],
+      ["Dinesh Karthik", rcbId, "dk.png", 19, "Wicket-keeper", "Right-hand bat", "Right-arm offbreak", "1985-06-01", "Indian", 250, 4800, 0, 145, 440, 135.30, 0.00, "Retired"],
+
+      // GT (Gujarat Titans)
+      ["Shubman Gill", gtId, "gill.png", 7, "Batsman", "Right-hand bat", "Right-arm offbreak", "1999-09-08", "Indian", 100, 3200, 0, 90, 310, 135.20, 0.00, "Active"],
+      ["Rashid Khan", gtId, "rashid.png", 19, "All-rounder", "Right-hand bat", "Right-arm legbreak", "1998-09-20", "Afghan", 120, 500, 150, 50, 35, 142.50, 6.70, "Active"],
+      ["Rahul Tewatia", gtId, "tewatia.png", 14, "All-rounder", "Left-hand bat", "Right-arm legbreak", "1993-05-20", "Indian", 90, 1000, 32, 60, 85, 132.80, 7.90, "Active"],
+      ["Sai Sudharsan", gtId, "sudharsan.png", 22, "Batsman", "Left-hand bat", "Right-arm legbreak", "2001-10-15", "Indian", 30, 1000, 0, 25, 95, 138.00, 0.00, "Active"],
+      ["David Miller", gtId, "miller.png", 10, "Batsman", "Left-hand bat", "Right-arm offbreak", "1989-06-10", "South African", 130, 2900, 0, 130, 210, 139.20, 0.00, "Active"],
+
+      // KKR (Kolkata Knight Riders)
+      ["Shreyas Iyer", kkrId, "shreyas.png", 41, "Batsman", "Right-hand bat", "Right-arm legbreak", "1994-12-06", "Indian", 110, 3100, 0, 100, 270, 126.50, 0.00, "Active"],
+      ["Sunil Narine", kkrId, "narine.png", 74, "All-rounder", "Left-hand bat", "Right-arm offbreak", "1988-05-26", "West Indian", 170, 1500, 170, 110, 160, 162.80, 6.15, "Active"],
+      ["Rinku Singh", kkrId, "rinku.png", 35, "Batsman", "Left-hand bat", "Right-arm offbreak", "1997-10-12", "Indian", 50, 900, 0, 55, 70, 145.20, 0.00, "Active"],
+      ["Andre Russell", kkrId, "russell.png", 12, "All-rounder", "Right-hand bat", "Right-arm fast", "1988-04-29", "West Indian", 120, 2400, 100, 200, 150, 174.00, 8.90, "Active"],
+      ["Varun Chakaravarthy", kkrId, "varun.png", 29, "Bowler", "Right-hand bat", "Right-arm legbreak", "1991-08-29", "Indian", 60, 20, 80, 0, 2, 70.00, 7.40, "Active"],
+
+      // RR (Rajasthan Royals)
+      ["Sanju Samson", rrId, "samson.png", 14, "Wicket-keeper", "Right-hand bat", "Right-arm offbreak", "1994-11-11", "Indian", 160, 4200, 0, 180, 330, 138.80, 0.00, "Active"],
+      ["Yashasvi Jaiswal", rrId, "jaiswal.png", 19, "Batsman", "Left-hand bat", "Right-arm legbreak", "2001-12-28", "Indian", 40, 1400, 0, 60, 150, 145.20, 0.00, "Active"],
+      ["Jos Buttler", rrId, "buttler.png", 63, "Wicket-keeper", "Right-hand bat", "None", "1990-09-08", "English", 100, 3500, 0, 150, 350, 147.50, 0.00, "Injured"],
+      ["Yuzvendra Chahal", rrId, "chahal.png", 3, "Bowler", "Right-hand bat", "Right-arm legbreak", "1990-07-23", "Indian", 150, 50, 200, 0, 2, 75.00, 7.70, "Active"],
+      ["Trent Boult", rrId, "boult.png", 18, "Bowler", "Right-hand bat", "Left-arm fast-medium", "1989-07-22", "New Zealander", 90, 40, 110, 1, 3, 80.00, 7.90, "Active"],
+
+      // LSG (Lucknow Super Giants)
+      ["KL Rahul", lsgId, "klrahul.png", 1, "Wicket-keeper", "Right-hand bat", "None", "1992-04-18", "Indian", 120, 4500, 0, 170, 380, 134.50, 0.00, "Active"],
+      ["Nicholas Pooran", lsgId, "pooran.png", 29, "Batsman", "Left-hand bat", "Right-arm offbreak", "1995-10-02", "West Indian", 80, 1800, 0, 120, 120, 155.00, 0.00, "Active"],
+      ["Marcus Stoinis", lsgId, "stoinis.png", 17, "All-rounder", "Right-hand bat", "Right-arm medium", "1989-08-16", "Australian", 90, 1700, 40, 80, 140, 140.80, 8.40, "Active"],
+      ["Ravi Bishnoi", lsgId, "bishnoi.png", 56, "Bowler", "Right-hand bat", "Right-arm legbreak", "2000-09-05", "Indian", 60, 30, 70, 0, 1, 80.00, 7.50, "Active"],
+      ["Quinton de Kock", lsgId, "qdk.png", 12, "Wicket-keeper", "Left-hand bat", "None", "1992-12-17", "South African", 100, 3100, 0, 110, 310, 134.00, 0.00, "Retired"],
+
+      // SRH (Sunrisers Hyderabad)
+      ["Pat Cummins", srhId, "cummins.png", 30, "All-rounder", "Right-hand bat", "Right-arm fast", "1993-05-08", "Australian", 60, 450, 60, 25, 35, 140.00, 8.10, "Active"],
+      ["Travis Head", srhId, "head.png", 12, "Batsman", "Left-hand bat", "Right-arm offbreak", "1993-12-29", "Australian", 30, 900, 5, 45, 100, 158.00, 8.20, "Active"],
+      ["Heinrich Klaasen", srhId, "klaasen.png", 45, "Wicket-keeper", "Right-hand bat", "Right-arm offbreak", "1991-07-30", "South African", 30, 950, 0, 65, 50, 165.80, 0.00, "Active"],
+      ["Abhishek Sharma", srhId, "abhishek.png", 4, "All-rounder", "Left-hand bat", "Left-arm orthodox", "2000-09-04", "Indian", 50, 1200, 10, 70, 95, 150.20, 8.30, "Active"],
+      ["Bhuvneshwar Kumar", srhId, "bhuvi.png", 15, "Bowler", "Right-hand bat", "Right-arm fast-medium", "1990-02-05", "Indian", 170, 250, 175, 5, 20, 95.00, 7.40, "Active"]
     ];
     for (const player of players) {
       await connection.query(
-        "INSERT INTO players (name, team_id, role, runs, wickets, sixes, fours, strike_rate, economy, matches_played) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        "INSERT INTO players (player_name, team_id, profile_image, jersey_number, role, batting_style, bowling_style, date_of_birth, nationality, matches_played, runs, wickets, sixes, fours, strike_rate, economy, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
         player
       );
     }

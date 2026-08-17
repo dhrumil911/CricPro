@@ -16,26 +16,30 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (email === "") {
+    // Trim whitespace/newlines that often sneak in via copy-paste
+    const trimmedEmail = email.trim();
+    const trimmedPassword = password.trim();
+
+    if (trimmedEmail === "") {
       setError("Please enter your email.");
       return;
     }
 
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    if (!emailPattern.test(email)) {
+    if (!emailPattern.test(trimmedEmail)) {
       setError("Please enter a valid email address.");
       return;
     }
 
-    if (password === "") {
+    if (trimmedPassword === "") {
       setError("Please enter your password.");
       return;
     }
 
     try {
       setError("");
-      const data = await login(email, password);
+      const data = await login(trimmedEmail, trimmedPassword);
       if (data.success) {
         localStorage.setItem("token", data.token);
         localStorage.setItem("admin", JSON.stringify(data.admin));

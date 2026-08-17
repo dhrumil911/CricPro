@@ -1,14 +1,12 @@
+import "dotenv/config";
 import express from "express";
 import cors from "cors";
-import dotenv from "dotenv";
-import { testConnection } from "./config/db.js";
+import pool, { testConnection } from "./config/db.js";
 import authRoutes from "./routes/authRoutes.js";
 import dashboardRoutes from "./routes/dashboardRoutes.js";
 import tournamentRoutes from "./routes/tournamentRoutes.js";
 import teamRoutes from "./routes/teamRoutes.js";
-
-// Load environment variables
-dotenv.config();
+import playerRoutes from "./routes/playerRoutes.js";
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -30,12 +28,33 @@ app.use("/api/auth", authRoutes);
 app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/tournaments", tournamentRoutes);
 app.use("/api/teams", teamRoutes);
+app.use("/api/players", playerRoutes);
 
 // Health Check Route
-app.get("/health", (req, res) => {
-  res.status(200).json({
-    success: true,
-    message: "CricPro Backend Running"
+app.get("/health", async (req, res) => {
+  const startTime = Date.now();
+  let dbStatus = "disconnected";
+  let latency = null;
+  const dbName = process.env.DB_NAME || "cricpro_db";
+
+  try {
+    const connection = await pool.getConnection();
+    await connection.query("SELECT 1");
+    connection.release();
+    dbStatus = "connected";
+    latency = `${Date.now() - startTime}ms`;
+  } catch (error) {
+    dbStatus = "disconnected";
+    console.error("Health Check DB Error:", error);
+  }
+
+  res.status(dbStatus === "connected" ? 200 : 500).json({
+    status: "UP",
+    database: {
+      status: dbStatus,
+      name: dbName,
+      latency: latency
+    }
   });
 });
 

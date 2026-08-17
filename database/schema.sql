@@ -52,16 +52,23 @@ CREATE TABLE IF NOT EXISTS teams (
 -- Players table with career statistics
 CREATE TABLE IF NOT EXISTS players (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  name VARCHAR(255) NOT NULL,
   team_id INT,
+  player_name VARCHAR(255) NOT NULL,
+  profile_image VARCHAR(255) DEFAULT NULL,
+  jersey_number INT DEFAULT NULL,
   role VARCHAR(100) NOT NULL, -- e.g. Batsman, Bowler, All-rounder, Wicket-keeper
+  batting_style VARCHAR(100) DEFAULT NULL,
+  bowling_style VARCHAR(100) DEFAULT NULL,
+  date_of_birth DATE DEFAULT NULL,
+  nationality VARCHAR(100) DEFAULT NULL,
+  matches_played INT DEFAULT 0,
   runs INT DEFAULT 0,
   wickets INT DEFAULT 0,
   sixes INT DEFAULT 0,
   fours INT DEFAULT 0,
   strike_rate DECIMAL(6,2) DEFAULT 0.00,
   economy DECIMAL(4,2) DEFAULT 0.00,
-  matches_played INT DEFAULT 0,
+  status ENUM('Active', 'Injured', 'Retired') DEFAULT 'Active',
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   FOREIGN KEY (team_id) REFERENCES teams(id) ON DELETE SET NULL
@@ -91,7 +98,7 @@ CREATE TABLE IF NOT EXISTS matches (
 -- Seed default administrator (Credentials: admin@cricpro.com / AdminPassword123)
 -- Only inserts if the admin does not already exist
 INSERT INTO admins (name, email, password)
-SELECT 'CricPro Admin', 'admin@cricpro.com', '$2b$10$Cvjg1eKNPgZlFZYhHGFqqu0b32djbZzJVLEgMqiVDGJj9H9zddaf2'
+SELECT 'CricPro Admin', 'admin@cricpro.com', '$2b$10$c.GaFtD.530XHAr7C6d8JO5Dek6a1qJCePrbfgipZ/eWYOO8rMUse'
 WHERE NOT EXISTS (
     SELECT 1 FROM admins WHERE email = 'admin@cricpro.com'
 );

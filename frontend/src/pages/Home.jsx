@@ -128,7 +128,7 @@ function Home() {
             </p>
           </div>
 
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
             <StatCard icon="🏆" number="12" title="Total Tournaments" />
             <StatCard icon="👥" number="48" title="Total Teams" />
             <StatCard icon="🏏" number="720" title="Total Players" />

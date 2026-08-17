@@ -98,6 +98,7 @@ export const createTournament = async (req, res) => {
     return res.status(201).json({
       success: true,
       message: "Tournament created successfully",
+      data: newTourn,
       tournament: newTourn
     });
   } catch (error) {
@@ -181,6 +182,7 @@ export const getTournaments = async (req, res) => {
         limit,
         pages: totalPages
       },
+      data: rows,
       tournaments: rows
     });
   } catch (error) {
@@ -219,6 +221,7 @@ export const getTournamentById = async (req, res) => {
 
     return res.status(200).json({
       success: true,
+      data: rows[0],
       tournament: rows[0]
     });
   } catch (error) {
@@ -334,6 +337,7 @@ export const updateTournament = async (req, res) => {
     return res.status(200).json({
       success: true,
       message: "Tournament updated successfully",
+      data: updatedTourn,
       tournament: updatedTourn
     });
   } catch (error) {
@@ -366,7 +370,8 @@ export const deleteTournament = async (req, res) => {
 
     return res.status(200).json({
       success: true,
-      message: "Tournament deleted successfully"
+      message: "Tournament deleted successfully",
+      data: null
     });
   } catch (error) {
     console.error("Error deleting tournament:", error.message);

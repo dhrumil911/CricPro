@@ -1,14 +1,14 @@
 import { findByEmail, comparePassword } from "../models/adminModel.js";
 import generateToken from "../utils/generateToken.js";
-
+ 
 /**
  * @desc    Authenticate admin & get token
  * @route   POST /api/auth/login
  * @access  Public
  */
 export const loginAdmin = async (req, res) => {
-  const { email, password } = req.body;
-
+  let { email, password } = req.body;
+ 
   try {
     // 1. Validate payload attributes presence
     if (!email || !password) {
@@ -17,7 +17,11 @@ export const loginAdmin = async (req, res) => {
         message: "Please provide both email and password"
       });
     }
-
+ 
+    // Trim whitespace/newlines that often sneak in via copy-paste
+    email = email.trim();
+    password = password.trim();
+ 
     // 2. Validate email structure format
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailPattern.test(email)) {
@@ -26,7 +30,7 @@ export const loginAdmin = async (req, res) => {
         message: "Please enter a valid email address"
       });
     }
-
+ 
     // 3. Find administrator details by email
     const admin = await findByEmail(email);
     if (!admin) {
@@ -35,7 +39,7 @@ export const loginAdmin = async (req, res) => {
         message: "Invalid email or password"
       });
     }
-
+ 
     // 4. Compare input credentials with database password hash
     const isMatch = await comparePassword(password, admin.password);
     if (!isMatch) {
@@ -44,10 +48,10 @@ export const loginAdmin = async (req, res) => {
         message: "Invalid email or password"
       });
     }
-
+ 
     // 5. Generate JSON Web Token
     const token = generateToken(admin.id);
-
+ 
     // 6. Return response payload omitting password details
     return res.status(200).json({
       success: true,
@@ -60,14 +64,15 @@ export const loginAdmin = async (req, res) => {
       }
     });
   } catch (error) {
-    console.error("Login controller error:", error.message);
+    console.error("Login Error:", error);
     return res.status(500).json({
       success: false,
-      message: "An internal server error occurred during login"
+      message: error.message,
+      stack: process.env.NODE_ENV !== "production" ? error.stack : undefined
     });
   }
 };
-
+ 
 /**
  * @desc    Get authenticated administrator profile
  * @route   GET /api/auth/profile
@@ -88,8 +93,9 @@ export const getAdminProfile = async (req, res) => {
     });
   }
 };
-
+ 
 export default {
   loginAdmin,
   getAdminProfile
 };
+ 

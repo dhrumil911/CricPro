@@ -5,7 +5,7 @@ dotenv.config();
 
 // Create the connection pool
 const pool = mysql.createPool({
-  host: process.env.DB_HOST || "localhost",
+  host: process.env.DB_HOST || "127.0.0.1",
   user: process.env.DB_USER || "root",
   password: process.env.DB_PASSWORD || "",
   database: process.env.DB_NAME || "cricpro_db",
@@ -24,7 +24,12 @@ export const testConnection = async () => {
     return true;
   } catch (error) {
     console.error("⚠️ MySQL Database connection failed!");
-    console.error(`Message: ${error.message}`);
+    console.error("Connection Error Object:", error);
+    console.error("Error Message:", error?.message);
+    console.error("Error Code:", error?.code);
+    console.error("Error Errno:", error?.errno);
+    console.error("Error SQLState:", error?.sqlState);
+    console.error("Error Stack Trace:", error?.stack);
     console.log("ℹ️ Ensure your MySQL server is running, the credentials in '.env' are correct, and the database exists.");
     return false;
   }

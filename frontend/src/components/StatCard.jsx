@@ -62,16 +62,18 @@ function StatCard({ icon, number, title, value }) {
   }, [displayValue, isNumeric, numericVal]);
 
   return (
-    <div className="glass-card p-6 rounded-2xl border border-slate-250 dark:border-slate-800/80 flex items-center gap-5 hover:border-slate-350 dark:hover:border-slate-700/60 hover:shadow-lg dark:hover:shadow-2xl transition-all duration-300">
-      <div className="p-3.5 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-850 flex items-center justify-center shrink-0 shadow-sm">
+    <div className="glass-card p-3 sm:p-6 rounded-2xl border border-slate-250 dark:border-slate-800/80 flex items-center gap-3 sm:gap-5 hover:border-slate-350 dark:hover:border-slate-700/60 hover:shadow-lg dark:hover:shadow-2xl transition-all duration-300 w-full min-w-0 box-border">
+      <div className="p-2.5 sm:p-3.5 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-855 flex items-center justify-center shrink-0 shadow-sm">
         {getStatIcon(title) || <span className="text-xl">{icon}</span>}
       </div>
 
-      <div className="text-left">
-        <div className="font-display font-extrabold text-2xl sm:text-3xl text-slate-850 dark:text-slate-100 tracking-tight">
+      <div className="text-left min-w-0 flex-1">
+        <div className="font-display font-extrabold text-lg sm:text-2xl md:text-3xl text-slate-850 dark:text-slate-100 tracking-tight">
           {isNumeric ? count.toLocaleString() : count}
         </div>
-        <div className="font-sans text-[10px] text-slate-500 dark:text-slate-450 uppercase font-bold tracking-wider mt-0.5">{title}</div>
+        <div className="font-sans text-[9px] sm:text-[10px] text-slate-500 dark:text-slate-455 uppercase font-bold tracking-wider mt-0.5 break-words">
+          {title}
+        </div>
       </div>
     </div>
   );

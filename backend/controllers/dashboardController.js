@@ -108,7 +108,7 @@ export const getDashboardLeaders = async (req, res) => {
   try {
     // Top Scorer
     const [[topScorer]] = await db.query(`
-      SELECT p.name, p.runs, p.strike_rate AS strikeRate, t.short_name AS teamName
+      SELECT p.player_name AS name, p.runs, p.strike_rate AS strikeRate, t.short_name AS teamName
       FROM players p
       LEFT JOIN teams t ON p.team_id = t.id
       ORDER BY p.runs DESC
@@ -117,7 +117,7 @@ export const getDashboardLeaders = async (req, res) => {
 
     // Top Wicket Taker
     const [[topWicketTaker]] = await db.query(`
-      SELECT p.name, p.wickets, p.economy, t.short_name AS teamName
+      SELECT p.player_name AS name, p.wickets, p.economy, t.short_name AS teamName
       FROM players p
       LEFT JOIN teams t ON p.team_id = t.id
       ORDER BY p.wickets DESC
@@ -126,7 +126,7 @@ export const getDashboardLeaders = async (req, res) => {
 
     // Most Sixes
     const [[mostSixes]] = await db.query(`
-      SELECT p.name, p.sixes, t.short_name AS teamName
+      SELECT p.player_name AS name, p.sixes, t.short_name AS teamName
       FROM players p
       LEFT JOIN teams t ON p.team_id = t.id
       ORDER BY p.sixes DESC
@@ -135,7 +135,7 @@ export const getDashboardLeaders = async (req, res) => {
 
     // Most Fours
     const [[mostFours]] = await db.query(`
-      SELECT p.name, p.fours, t.short_name AS teamName
+      SELECT p.player_name AS name, p.fours, t.short_name AS teamName
       FROM players p
       LEFT JOIN teams t ON p.team_id = t.id
       ORDER BY p.fours DESC
@@ -144,7 +144,7 @@ export const getDashboardLeaders = async (req, res) => {
 
     // Best Strike Rate (min 100 runs)
     const [[bestStrikeRate]] = await db.query(`
-      SELECT p.name, p.strike_rate AS strikeRate, p.runs, t.short_name AS teamName
+      SELECT p.player_name AS name, p.strike_rate AS strikeRate, p.runs, t.short_name AS teamName
       FROM players p
       LEFT JOIN teams t ON p.team_id = t.id
       WHERE p.runs >= 100
@@ -154,7 +154,7 @@ export const getDashboardLeaders = async (req, res) => {
 
     // Best Economy (min 5 matches played)
     const [[bestEconomy]] = await db.query(`
-      SELECT p.name, p.economy, p.wickets, t.short_name AS teamName
+      SELECT p.player_name AS name, p.economy, p.wickets, t.short_name AS teamName
       FROM players p
       LEFT JOIN teams t ON p.team_id = t.id
       WHERE p.matches_played >= 5

@@ -50,6 +50,8 @@ function Dashboard() {
   // Dynamic States
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [apiOffline, setApiOffline] = useState(false);
+  const [dbError, setDbError] = useState("");
   const [stats, setStats] = useState({
     tournaments: 0,
     teams: 0,
@@ -96,6 +98,8 @@ function Dashboard() {
     const fetchDashboardData = async () => {
       setLoading(true);
       setError("");
+      setApiOffline(false);
+      setDbError("");
       try {
         const [statsRes, matchesRes, leadersRes, chartsRes] = await Promise.all([
           getDashboardStats(),
@@ -112,9 +116,36 @@ function Dashboard() {
         triggerToast("Dashboard data loaded successfully", "success");
       } catch (err) {
         console.error("Dashboard integration error:", err);
-        setError(
-          err.response?.data?.message || "Failed to load dashboard data. Connecting to backend fallback API..."
-        );
+        if (err.response) {
+          const status = err.response.status;
+          const message = err.response.data?.message || "Something went wrong.";
+
+          if (status === 401) {
+            // Session/token issue — not a database problem. Send user back to login.
+            setApiOffline(false);
+            setDbError("");
+            setError("");
+            triggerToast("Session expired. Please log in again.", "error");
+            localStorage.removeItem("token");
+            navigate("/login");
+            return;
+          } else if (status >= 500) {
+            // Genuine server/database-side failure
+            setApiOffline(false);
+            setDbError(message);
+            setError(message);
+          } else {
+            // Other client errors (400, 403, 404, etc.) — not a DB issue either
+            setApiOffline(false);
+            setDbError("");
+            setError(message);
+          }
+        } else {
+          // Network error, backend unreachable
+          setApiOffline(true);
+          setDbError("");
+          setError("API Server is unreachable. Please verify that the backend is online.");
+        }
         triggerToast("Failed to fetch latest API states", "error");
       } finally {
         setLoading(false);
@@ -165,10 +196,15 @@ function Dashboard() {
             </div>
             {loading ? (
               <div className="h-6 w-32 animate-pulse bg-slate-200 dark:bg-slate-800/80 rounded-full" />
-            ) : error ? (
-              <div className="text-xs text-yellow-600 dark:text-highlight font-bold px-3.5 py-1.5 bg-yellow-500/10 border border-yellow-500/20 rounded-full flex items-center gap-1.5">
+            ) : apiOffline ? (
+              <div className="text-xs text-yellow-600 dark:text-highlight font-bold px-3.5 py-1.5 bg-yellow-500/10 border border-yellow-500/20 rounded-full flex items-center gap-1.5 animate-pulse">
                 <AlertTriangle className="w-3.5 h-3.5" />
                 API OFFLINE
+              </div>
+            ) : dbError ? (
+              <div className="text-xs text-red-655 dark:text-danger font-bold px-3.5 py-1.5 bg-red-500/10 border border-red-500/20 rounded-full flex items-center gap-1.5">
+                <AlertTriangle className="w-3.5 h-3.5" />
+                DATABASE ERROR
               </div>
             ) : (
               <div className="text-xs text-accent dark:text-highlight font-bold px-3.5 py-1.5 bg-accent/10 dark:bg-highlight/10 border border-accent/20 dark:border-highlight/20 rounded-full flex items-center gap-1.5 uppercase tracking-wider">
@@ -178,8 +214,22 @@ function Dashboard() {
             )}
           </div>
 
-          {/* Database connection failure warning */}
-          {error && (
+          {/* Warnings Section */}
+          {apiOffline && (
+            <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-left">
+              <div className="space-y-1">
+                <h3 className="font-bold text-xs text-danger flex items-center gap-1.5">
+                  <AlertTriangle className="w-4 h-4 shrink-0" />
+                  API Server Offline
+                </h3>
+                <p className="text-[10px] text-slate-500 dark:text-slate-450 leading-relaxed max-w-2xl">
+                  {error} Please make sure the Express API server is running on port 5000.
+                </p>
+              </div>
+            </div>
+          )}
+
+          {dbError && (
             <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-left">
               <div className="space-y-1">
                 <h3 className="font-bold text-xs text-danger flex items-center gap-1.5">
@@ -187,7 +237,7 @@ function Dashboard() {
                   Database Connection Error
                 </h3>
                 <p className="text-[10px] text-slate-500 dark:text-slate-450 leading-relaxed max-w-2xl">
-                  {error}. Dashboard is displaying placeholder states because SQL pool queries failed to resolve.
+                  {dbError}. CricPro could not execute SQL queries on the active MySQL pool.
                 </p>
               </div>
             </div>

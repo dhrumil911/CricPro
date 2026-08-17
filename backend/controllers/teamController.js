@@ -86,6 +86,7 @@ export const createTeam = async (req, res) => {
     return res.status(201).json({
       success: true,
       message: "Franchise created successfully",
+      data: newRow[0],
       team: newRow[0]
     });
   } catch (error) {
@@ -168,6 +169,7 @@ export const getTeams = async (req, res) => {
         limit,
         pages: totalPages
       },
+      data: rows,
       teams: rows
     });
   } catch (error) {
@@ -202,6 +204,7 @@ export const getTeamById = async (req, res) => {
 
     return res.status(200).json({
       success: true,
+      data: rows[0],
       team: rows[0]
     });
   } catch (error) {
@@ -320,6 +323,7 @@ export const updateTeam = async (req, res) => {
     return res.status(200).json({
       success: true,
       message: "Franchise details updated successfully",
+      data: updatedRow[0],
       team: updatedRow[0]
     });
   } catch (error) {
@@ -352,7 +356,8 @@ export const deleteTeam = async (req, res) => {
 
     return res.status(200).json({
       success: true,
-      message: "Franchise deleted successfully"
+      message: "Franchise deleted successfully",
+      data: null
     });
   } catch (error) {
     console.error("Error deleting team:", error.message);
@@ -379,14 +384,16 @@ export const getTeamStats = async (req, res) => {
     // Total registered players
     const [[{ players }]] = await db.query("SELECT COUNT(*) AS players FROM players");
 
+    const statsObj = {
+      totalTeams: total,
+      activeTeams: active,
+      inactiveTeams: inactive,
+      totalPlayers: players
+    };
     return res.status(200).json({
       success: true,
-      stats: {
-        totalTeams: total,
-        activeTeams: active,
-        inactiveTeams: inactive,
-        totalPlayers: players
-      }
+      data: statsObj,
+      stats: statsObj
     });
   } catch (error) {
     console.error("Error retrieving team stats:", error.message);
@@ -413,6 +420,7 @@ export const searchTeams = async (req, res) => {
 
     return res.status(200).json({
       success: true,
+      data: rows,
       teams: rows
     });
   } catch (error) {
@@ -437,6 +445,7 @@ export const getTeamDropdown = async (req, res) => {
 
     return res.status(200).json({
       success: true,
+      data: rows,
       teams: rows
     });
   } catch (error) {

@@ -18,18 +18,36 @@ export const protect = async (req, res, next) => {
       token = req.headers.authorization.split(" ")[1];
 
       // Verify token
-      const decoded = jwt.verify(
-        token,
-        process.env.JWT_SECRET || "cricpro_local_jwt_secret_dev_key_change_me"
-      );
+      let decoded;
+      try {
+        decoded = jwt.verify(
+          token,
+          process.env.JWT_SECRET || "cricpro_local_jwt_secret_dev_key_change_me"
+        );
+      } catch (jwtError) {
+        console.error("JWT verification error (invalid token):", jwtError.message);
+        return res.status(401).json({
+          success: false,
+          message: "Invalid or expired authentication token."
+        });
+      }
 
       // Fetch admin details from database (excluding password details)
-      const admin = await findById(decoded.id);
+      let admin;
+      try {
+        admin = await findById(decoded.id);
+      } catch (dbError) {
+        console.error("Database query error (findById) during auth:", dbError);
+        return res.status(500).json({
+          success: false,
+          message: "Database connection/query error while validating authentication."
+        });
+      }
 
       if (!admin) {
         return res.status(401).json({
           success: false,
-          message: "Not authorized, admin record not found"
+          message: "User session is no longer valid."
         });
       }
 
@@ -37,10 +55,10 @@ export const protect = async (req, res, next) => {
       req.admin = admin;
       return next();
     } catch (error) {
-      console.error("JWT verification error:", error.message);
-      return res.status(401).json({
+      console.error("General auth middleware error:", error);
+      return res.status(500).json({
         success: false,
-        message: "Not authorized, token verification failed"
+        message: "An internal server error occurred while processing authentication."
       });
     }
   }
